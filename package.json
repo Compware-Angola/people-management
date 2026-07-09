@@ -8,7 +8,7 @@
     "type": "git"
   },
   "scripts": {
-    "dev": "vite dev --port 4004",
+    "dev": "vite dev --port 4005",
     "generate-routes": "tsr generate",
     "build": "vite build",
     "preview": "vite preview",
