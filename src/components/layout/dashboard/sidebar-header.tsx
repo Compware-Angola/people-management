@@ -20,7 +20,7 @@ export function DashboardSidebarHeader() {
               Universidade Metodista
             </p>
             <p className="text-primary text-xs font-medium opacity-80">
-             Portal de Gestão de Pessoas
+             Admin Gestão de Pessoas
             </p>
           </div>
         )}
