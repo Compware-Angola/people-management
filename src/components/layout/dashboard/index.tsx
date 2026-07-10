@@ -12,7 +12,6 @@ import { DashboardSidebarHeader } from './sidebar-header'
 import { NavUser } from './nav-user'
 import { DASHBOARD_NAV, EXAMPLE_NAV } from '@/config/menu-structure'
 
-
 export function DashboardLayout({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
