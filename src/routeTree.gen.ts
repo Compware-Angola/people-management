@@ -12,7 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as PrivateRouteRouteImport } from './routes/_private/route'
 import { Route as PrivateIndexRouteImport } from './routes/_private/index'
 import { Route as PrivateSplatRouteImport } from './routes/_private/$'
+import { Route as PrivateEmployeesIndexRouteImport } from './routes/_private/employees/index'
 import { Route as PrivateAdminsIndexRouteImport } from './routes/_private/admins/index'
+import { Route as PrivateEmployeesCreateRouteImport } from './routes/_private/employees/create'
 
 const PrivateRouteRoute = PrivateRouteRouteImport.update({
   id: '/_private',
@@ -28,40 +30,58 @@ const PrivateSplatRoute = PrivateSplatRouteImport.update({
   path: '/$',
   getParentRoute: () => PrivateRouteRoute,
 } as any)
+const PrivateEmployeesIndexRoute = PrivateEmployeesIndexRouteImport.update({
+  id: '/employees/',
+  path: '/employees/',
+  getParentRoute: () => PrivateRouteRoute,
+} as any)
 const PrivateAdminsIndexRoute = PrivateAdminsIndexRouteImport.update({
   id: '/admins/',
   path: '/admins/',
+  getParentRoute: () => PrivateRouteRoute,
+} as any)
+const PrivateEmployeesCreateRoute = PrivateEmployeesCreateRouteImport.update({
+  id: '/employees/create',
+  path: '/employees/create',
   getParentRoute: () => PrivateRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PrivateIndexRoute
   '/$': typeof PrivateSplatRoute
+  '/employees/create': typeof PrivateEmployeesCreateRoute
   '/admins/': typeof PrivateAdminsIndexRoute
+  '/employees/': typeof PrivateEmployeesIndexRoute
 }
 export interface FileRoutesByTo {
   '/$': typeof PrivateSplatRoute
   '/': typeof PrivateIndexRoute
+  '/employees/create': typeof PrivateEmployeesCreateRoute
   '/admins': typeof PrivateAdminsIndexRoute
+  '/employees': typeof PrivateEmployeesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_private': typeof PrivateRouteRouteWithChildren
   '/_private/$': typeof PrivateSplatRoute
   '/_private/': typeof PrivateIndexRoute
+  '/_private/employees/create': typeof PrivateEmployeesCreateRoute
   '/_private/admins/': typeof PrivateAdminsIndexRoute
+  '/_private/employees/': typeof PrivateEmployeesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$' | '/admins/'
+  fullPaths: '/' | '/$' | '/employees/create' | '/admins/' | '/employees/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/$' | '/' | '/admins'
+  to: '/$' | '/' | '/employees/create' | '/admins' | '/employees'
   id:
     | '__root__'
     | '/_private'
     | '/_private/$'
     | '/_private/'
+    | '/_private/employees/create'
     | '/_private/admins/'
+    | '/_private/employees/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -91,11 +111,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateSplatRouteImport
       parentRoute: typeof PrivateRouteRoute
     }
+    '/_private/employees/': {
+      id: '/_private/employees/'
+      path: '/employees'
+      fullPath: '/employees/'
+      preLoaderRoute: typeof PrivateEmployeesIndexRouteImport
+      parentRoute: typeof PrivateRouteRoute
+    }
     '/_private/admins/': {
       id: '/_private/admins/'
       path: '/admins'
       fullPath: '/admins/'
       preLoaderRoute: typeof PrivateAdminsIndexRouteImport
+      parentRoute: typeof PrivateRouteRoute
+    }
+    '/_private/employees/create': {
+      id: '/_private/employees/create'
+      path: '/employees/create'
+      fullPath: '/employees/create'
+      preLoaderRoute: typeof PrivateEmployeesCreateRouteImport
       parentRoute: typeof PrivateRouteRoute
     }
   }
@@ -104,13 +138,17 @@ declare module '@tanstack/react-router' {
 interface PrivateRouteRouteChildren {
   PrivateSplatRoute: typeof PrivateSplatRoute
   PrivateIndexRoute: typeof PrivateIndexRoute
+  PrivateEmployeesCreateRoute: typeof PrivateEmployeesCreateRoute
   PrivateAdminsIndexRoute: typeof PrivateAdminsIndexRoute
+  PrivateEmployeesIndexRoute: typeof PrivateEmployeesIndexRoute
 }
 
 const PrivateRouteRouteChildren: PrivateRouteRouteChildren = {
   PrivateSplatRoute: PrivateSplatRoute,
   PrivateIndexRoute: PrivateIndexRoute,
+  PrivateEmployeesCreateRoute: PrivateEmployeesCreateRoute,
   PrivateAdminsIndexRoute: PrivateAdminsIndexRoute,
+  PrivateEmployeesIndexRoute: PrivateEmployeesIndexRoute,
 }
 
 const PrivateRouteRouteWithChildren = PrivateRouteRoute._addFileChildren(
