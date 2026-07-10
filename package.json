@@ -46,6 +46,8 @@
     "@tailwindcss/typography": "0.5.20",
     "@tanstack/devtools-vite": "0.8.1",
     "@tanstack/eslint-config": "0.4.0",
+    "@tanstack/eslint-plugin-query": "5.101.2",
+    "@tanstack/react-router-ssr-query": "1.167.1",
     "@tanstack/router-cli": "1.167.18",
     "@types/node": "26.1.1",
     "@types/react": "19.2.17",
