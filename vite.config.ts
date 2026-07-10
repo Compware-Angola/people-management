@@ -18,7 +18,7 @@ const config = defineConfig({
       manifest: {
         name: 'Gestão de Pessoas',
         short_name: 'RH',
-        theme_color: '#2563eb',
+        theme_color: '#eb2525ff',
         background_color: '#ffffff',
         display: 'standalone',
         icons: [
