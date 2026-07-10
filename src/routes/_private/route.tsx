@@ -2,9 +2,8 @@ import { Link, Outlet, createFileRoute } from '@tanstack/react-router'
 import { DashboardLayout } from '@/components/layout/dashboard'
 
 export const Route = createFileRoute('/_private')({
-  
   component: RouteComponent,
-notFoundComponent: () => <NotFoundPrivate />,
+  notFoundComponent: () => <NotFoundPrivate />,
 })
 
 function RouteComponent() {

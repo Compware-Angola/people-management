@@ -11,9 +11,9 @@ export const EXAMPLE_NAV: NavItem[] = [
         permission: [PermissionsEnum.READ_ADMIN],
     },
     {
-        title: 'Exemplo 2',
+        title: 'About',
         icon: Briefcase,
-        url: '/departments',
+        url: '/about',
         permission: [PermissionsEnum.READ_DEPARTMENT, PermissionsEnum.READ_DEPARTMENT],
     },
     {
