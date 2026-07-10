@@ -12,8 +12,8 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <>
-     <TooltipProvider>
-      <Outlet />
+      <TooltipProvider>
+        <Outlet />
       </TooltipProvider>
       <TanStackDevtools
         config={{
