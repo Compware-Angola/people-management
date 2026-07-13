@@ -11,15 +11,10 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import { EmployeeFormModal } from './components/employee-form-modal'
-import type {
-  
-
-} from './components/employee-form-modal'
 import { EmployeeFilters } from './components/employee-filters'
 import { EmployeeTable } from './components/employee-table'
 import { Pagination } from '@/components/table/pagination'
 import { useEmployeesQuery } from '@/hooks/employees'
-import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import type { Employee } from '@/services/employees/employees.types'
 
@@ -43,33 +38,10 @@ export function ListEmployees() {
 
   const openEditModal = (employee: Employee) => {
     setEditingEmployee(employee)
-
     setIsModalOpen(true)
   }
 
-  /**
-   * Temporário:
-   * depois será mutation de archive
-   */
-  const handleArchive = (employee: Employee) => {
-    toast.info('Arquivar colaborador', {
-      description: `${employee.name} será arquivado.`,
-    })
-  }
 
-  const filteredEmployees = employees.filter((employee) => {
-    const term = searchTerm.trim().toLowerCase()
-
-    if (!term) {
-      return true
-    }
-    return (
-      employee.name.toLowerCase().includes(term) ||
-      employee.bi.toLowerCase().includes(term) ||
-      employee.nif.toLowerCase().includes(term) ||
-      employee.email.toLowerCase().includes(term)
-    )
-  })
 
   const total = meta?.total ?? 0
   const totalPages = meta?.totalPages ?? 1
@@ -124,12 +96,11 @@ export function ListEmployees() {
         />
 
         <EmployeeTable
-          employees={filteredEmployees}
+          employees={employees}
           loading={loading}
           onView={() => {}}
           isError={isError}
           onEdit={openEditModal}
-          onArchive={handleArchive}
         />
 
         <Pagination

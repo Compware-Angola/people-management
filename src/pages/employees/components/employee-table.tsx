@@ -1,7 +1,7 @@
-import { Archive, Eye, Pencil, Users } from 'lucide-react'
+import {  Users } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+
 import {
   Table,
   TableBody,
@@ -10,23 +10,18 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+
 
 
 import { TableGroupRowSkeleton } from '@/components/table/table-skeleton'
 import type { Employee } from '@/services/employees/employees.types'
+import { EmployeeTableActions } from './employee-table-actions'
 
 export type EmployeeTableProps= {
   employees: Employee[]
   loading: boolean
   onView: (employee: Employee) => void
   onEdit: (employee: Employee) => void
-  onArchive: (employee: Employee) => void
   isError?: boolean
 }
 
@@ -35,7 +30,6 @@ export function EmployeeTable({
   loading,
   onView,
   onEdit,
-  onArchive,
   isError,
 }: EmployeeTableProps) {
   return (
@@ -85,17 +79,11 @@ export function EmployeeTable({
             employees.map((employee) => (
               <TableRow key={employee.id}>
                 <TableCell className="font-medium">{employee.name}</TableCell>
-
                 <TableCell>{employee.bi}</TableCell>
-
                 <TableCell>{employee.nif}</TableCell>
-
                 <TableCell>{employee.phone}</TableCell>
-
                 <TableCell>{employee.province}</TableCell>
-
                 <TableCell>{employee.email}</TableCell>
-
                 <TableCell>
                   {employee.status === 1 ? (
                     <Badge className="bg-emerald-100 text-emerald-700">
@@ -105,58 +93,8 @@ export function EmployeeTable({
                     <Badge variant="secondary">Inativo</Badge>
                   )}
                 </TableCell>
-
                 <TableCell>
-                  <div className="flex justify-end gap-1">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => onView(employee)}
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                        </TooltipTrigger>
-
-                        <TooltipContent>Ver detalhes</TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => onEdit(employee)}
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                        </TooltipTrigger>
-
-                        <TooltipContent>Editar</TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            disabled={employee.status === 0}
-                            onClick={() => onArchive(employee)}
-                          >
-                            <Archive className="h-4 w-4" />
-                          </Button>
-                        </TooltipTrigger>
-
-                        <TooltipContent>Arquivar</TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
+                   <EmployeeTableActions employee={employee}  onEdit={()=>onEdit(employee)} onView={() => onView(employee)}/>
                 </TableCell>
               </TableRow>
             ))
