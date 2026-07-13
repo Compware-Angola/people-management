@@ -1,2 +1,2 @@
-export * from "./dashboard"
-export * from "./employees"
+export * from './dashboard'
+export * from './employees'

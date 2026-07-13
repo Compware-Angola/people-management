@@ -33,6 +33,5 @@ export const useAuth = () => {
     canAny: (perm: PermissionsEnum[]) => true,
     isAuthenticated: true,
     hasFullAccess: true,
-   
   }
 }

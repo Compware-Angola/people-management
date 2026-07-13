@@ -71,8 +71,7 @@ export const Route = createRootRoute({
       },
       {
         property: 'og:description',
-        content:
-          'Sistema moderno para gestão de pessoas e recursos humanos.',
+        content: 'Sistema moderno para gestão de pessoas e recursos humanos.',
       },
       {
         property: 'og:image',
@@ -94,8 +93,7 @@ export const Route = createRootRoute({
       },
       {
         name: 'twitter:description',
-        content:
-          'Sistema moderno para gestão de pessoas e recursos humanos.',
+        content: 'Sistema moderno para gestão de pessoas e recursos humanos.',
       },
       {
         name: 'twitter:image',
@@ -158,7 +156,7 @@ function RootComponent() {
 
       <TooltipProvider>
         <Outlet />
-        <Toaster richColors position="bottom-right" closeButton  />
+        <Toaster richColors position="bottom-right" closeButton />
       </TooltipProvider>
 
       <TanStackDevtools

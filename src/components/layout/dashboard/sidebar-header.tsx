@@ -28,6 +28,3 @@ export function DashboardSidebarHeader() {
     </SidebarHeader>
   )
 }
-
-
-
