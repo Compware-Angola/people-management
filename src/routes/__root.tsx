@@ -158,7 +158,7 @@ function RootComponent() {
 
       <TooltipProvider>
         <Outlet />
-        <Toaster richColors position="bottom-right" />
+        <Toaster richColors position="bottom-right" closeButton  />
       </TooltipProvider>
 
       <TanStackDevtools

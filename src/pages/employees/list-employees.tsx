@@ -292,7 +292,7 @@ export function ListEmployees() {
             <div className="rounded-lg border border-border bg-card shadow-sm">
                 {/* Barra de filtros */}
                 <div className="flex flex-col gap-3 border-b border-border p-4 md:flex-row md:items-center md:justify-between">
-                    <div className="relative w-full md:max-w-sm">
+                    <div className="relative w-full md:max-w-md">
                         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
                             placeholder="Pesquisar por nome, BI, NIF ou email..."
@@ -305,27 +305,7 @@ export function ListEmployees() {
                         />
                     </div>
 
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <span>Itens por página</span>
-                        <Select
-                            value={String(limit)}
-                            onValueChange={(value) => {
-                                setLimit(Number(value));
-                                setPage(1);
-                            }}
-                        >
-                            <SelectTrigger className="w-[80px] bg-background">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {PAGE_SIZE_OPTIONS.map((size) => (
-                                    <SelectItem key={size} value={size}>
-                                        {size}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
+
                 </div>
 
                 {/* Tabela */}
@@ -448,37 +428,60 @@ export function ListEmployees() {
                     </Table>
                 </div>
 
-                {/* Paginação */}
+
                 <div className="flex flex-col gap-3 border-t border-border p-4 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between">
                     <span>
                         {total === 0
                             ? "0 resultados"
                             : `A mostrar ${rangeStart}–${rangeEnd} de ${total}`}
                     </span>
-
-                    <div className="flex items-center gap-2">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            disabled={currentPage <= 1 || isLoading}
-                            onClick={() => setPage((p) => Math.max(1, p - 1))}
-                        >
-                            <ChevronLeft className="mr-1 h-4 w-4" />
-                            Anterior
-                        </Button>
-                        <span className="text-foreground">
-                            Página {currentPage} de {totalPages}
-                        </span>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            disabled={currentPage >= totalPages || isLoading}
-                            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                        >
-                            Seguinte
-                            <ChevronRight className="ml-1 h-4 w-4" />
-                        </Button>
+                    <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <span>Itens por página</span>
+                            <Select
+                                value={String(limit)}
+                                onValueChange={(value) => {
+                                    setLimit(Number(value));
+                                    setPage(1);
+                                }}
+                            >
+                                <SelectTrigger className="w-[80px] bg-background">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {PAGE_SIZE_OPTIONS.map((size) => (
+                                        <SelectItem key={size} value={size}>
+                                            {size}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={currentPage <= 1 || isLoading}
+                                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                            >
+                                <ChevronLeft className="mr-1 h-4 w-4" />
+                                Anterior
+                            </Button>
+                            <span className="text-foreground">
+                                Página {currentPage} de {totalPages}
+                            </span>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={currentPage >= totalPages || isLoading}
+                                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                            >
+                                Seguinte
+                                <ChevronRight className="ml-1 h-4 w-4" />
+                            </Button>
+                        </div>
                     </div>
+
                 </div>
             </div>
 
