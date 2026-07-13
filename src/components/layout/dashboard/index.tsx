@@ -10,7 +10,7 @@ import { Header } from './header'
 import { NavMain } from './nav-main'
 import { DashboardSidebarHeader } from './sidebar-header'
 import { NavUser } from './nav-user'
-import { DASHBOARD_NAV, EXAMPLE_NAV } from '@/config/menu-structure'
+import { DASHBOARD_NAV, EMPLOYEES_NAV } from '@/config/menu-structure'
 
 export function DashboardLayout({
   ...props
@@ -21,7 +21,7 @@ export function DashboardLayout({
         <DashboardSidebarHeader />
         <SidebarContent>
           <NavMain items={DASHBOARD_NAV} />
-          <NavMain items={EXAMPLE_NAV} groupLabel="Exemplo" />
+          <NavMain items={EMPLOYEES_NAV} groupLabel="Colaboradores" />
         </SidebarContent>
         <SidebarFooter>
           <NavUser />

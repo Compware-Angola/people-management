@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as PrivateRouteRouteImport } from './routes/_private/route'
 import { Route as PrivateIndexRouteImport } from './routes/_private/index'
 import { Route as PrivateSplatRouteImport } from './routes/_private/$'
+import { Route as PrivateEmployeesIndexRouteImport } from './routes/_private/employees/index'
 import { Route as PrivateAdminsIndexRouteImport } from './routes/_private/admins/index'
 import { Route as PrivateAboutIndexRouteImport } from './routes/_private/about/index'
 
@@ -27,6 +28,11 @@ const PrivateIndexRoute = PrivateIndexRouteImport.update({
 const PrivateSplatRoute = PrivateSplatRouteImport.update({
   id: '/$',
   path: '/$',
+  getParentRoute: () => PrivateRouteRoute,
+} as any)
+const PrivateEmployeesIndexRoute = PrivateEmployeesIndexRouteImport.update({
+  id: '/employees/',
+  path: '/employees/',
   getParentRoute: () => PrivateRouteRoute,
 } as any)
 const PrivateAdminsIndexRoute = PrivateAdminsIndexRouteImport.update({
@@ -45,12 +51,14 @@ export interface FileRoutesByFullPath {
   '/$': typeof PrivateSplatRoute
   '/about/': typeof PrivateAboutIndexRoute
   '/admins/': typeof PrivateAdminsIndexRoute
+  '/employees/': typeof PrivateEmployeesIndexRoute
 }
 export interface FileRoutesByTo {
   '/$': typeof PrivateSplatRoute
   '/': typeof PrivateIndexRoute
   '/about': typeof PrivateAboutIndexRoute
   '/admins': typeof PrivateAdminsIndexRoute
+  '/employees': typeof PrivateEmployeesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -59,12 +67,13 @@ export interface FileRoutesById {
   '/_private/': typeof PrivateIndexRoute
   '/_private/about/': typeof PrivateAboutIndexRoute
   '/_private/admins/': typeof PrivateAdminsIndexRoute
+  '/_private/employees/': typeof PrivateEmployeesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$' | '/about/' | '/admins/'
+  fullPaths: '/' | '/$' | '/about/' | '/admins/' | '/employees/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/$' | '/' | '/about' | '/admins'
+  to: '/$' | '/' | '/about' | '/admins' | '/employees'
   id:
     | '__root__'
     | '/_private'
@@ -72,6 +81,7 @@ export interface FileRouteTypes {
     | '/_private/'
     | '/_private/about/'
     | '/_private/admins/'
+    | '/_private/employees/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -101,6 +111,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateSplatRouteImport
       parentRoute: typeof PrivateRouteRoute
     }
+    '/_private/employees/': {
+      id: '/_private/employees/'
+      path: '/employees'
+      fullPath: '/employees/'
+      preLoaderRoute: typeof PrivateEmployeesIndexRouteImport
+      parentRoute: typeof PrivateRouteRoute
+    }
     '/_private/admins/': {
       id: '/_private/admins/'
       path: '/admins'
@@ -123,6 +140,7 @@ interface PrivateRouteRouteChildren {
   PrivateIndexRoute: typeof PrivateIndexRoute
   PrivateAboutIndexRoute: typeof PrivateAboutIndexRoute
   PrivateAdminsIndexRoute: typeof PrivateAdminsIndexRoute
+  PrivateEmployeesIndexRoute: typeof PrivateEmployeesIndexRoute
 }
 
 const PrivateRouteRouteChildren: PrivateRouteRouteChildren = {
@@ -130,6 +148,7 @@ const PrivateRouteRouteChildren: PrivateRouteRouteChildren = {
   PrivateIndexRoute: PrivateIndexRoute,
   PrivateAboutIndexRoute: PrivateAboutIndexRoute,
   PrivateAdminsIndexRoute: PrivateAdminsIndexRoute,
+  PrivateEmployeesIndexRoute: PrivateEmployeesIndexRoute,
 }
 
 const PrivateRouteRouteWithChildren = PrivateRouteRoute._addFileChildren(
