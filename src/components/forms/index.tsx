@@ -21,7 +21,7 @@ export const { useAppForm } = createFormHook({
     OTPField,
     AsyncComboboxField,
     SelectField,
-    ComboboxField
+    ComboboxField,
   },
   formComponents: {},
 })

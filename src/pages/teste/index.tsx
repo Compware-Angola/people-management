@@ -1,11 +1,23 @@
-import { StatCard } from "@/components/cards/stats-cards";
-import { PageHeader } from "@/components/headers/page-header";
+import { StatCard } from '@/components/cards/stats-cards'
+import { PageHeader } from '@/components/headers/page-header'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Link } from "@tanstack/react-router";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Link } from '@tanstack/react-router'
 
-
-import { Users, GraduationCap, BookOpen, FileCheck, TrendingUp, Calendar } from "lucide-react";
+import {
+  Users,
+  GraduationCap,
+  BookOpen,
+  FileCheck,
+  TrendingUp,
+  Calendar,
+} from 'lucide-react'
 
 export function TestePage() {
   return (
@@ -60,15 +72,21 @@ export function TestePage() {
           <CardContent className="space-y-3">
             <div className="flex flex-col gap-1 p-3 rounded-lg bg-accent/50">
               <p className="text-sm font-medium">Início das Avaliações</p>
-              <p className="text-xs text-muted-foreground">15 de Janeiro, 2025</p>
+              <p className="text-xs text-muted-foreground">
+                15 de Janeiro, 2025
+              </p>
             </div>
             <div className="flex flex-col gap-1 p-3 rounded-lg bg-accent/50">
               <p className="text-sm font-medium">Prazo Lançamento de Notas</p>
-              <p className="text-xs text-muted-foreground">28 de Janeiro, 2025</p>
+              <p className="text-xs text-muted-foreground">
+                28 de Janeiro, 2025
+              </p>
             </div>
             <div className="flex flex-col gap-1 p-3 rounded-lg bg-accent/50">
               <p className="text-sm font-medium">Reunião Conselho Pedagógico</p>
-              <p className="text-xs text-muted-foreground">5 de Fevereiro, 2025</p>
+              <p className="text-xs text-muted-foreground">
+                5 de Fevereiro, 2025
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -108,7 +126,9 @@ export function TestePage() {
           <CardContent className="space-y-3">
             <div className="flex flex-col gap-1 p-3 rounded-lg bg-warning/10 border border-warning/20">
               <p className="text-sm font-medium">8 Pautas para validar</p>
-              <p className="text-xs text-muted-foreground">Avaliações → Validação</p>
+              <p className="text-xs text-muted-foreground">
+                Avaliações → Validação
+              </p>
             </div>
             <div className="flex flex-col gap-1 p-3 rounded-lg bg-primary/10 border border-primary/20">
               <p className="text-sm font-medium">12 Novos candidatos</p>
@@ -131,12 +151,24 @@ export function TestePage() {
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
-              { name: "Avaliações", icon: FileCheck, path: "/avaliacoes/controle" },
-              { name: "Assiduidade", icon: BookOpen, path: "/assiduidade/controle" },
-              { name: "Horários", icon: Calendar, path: "/horarios/listar" },
-              { name: "Estudantes", icon: Users, path: "/inscricoes/lista-geral" },
+              {
+                name: 'Avaliações',
+                icon: FileCheck,
+                path: '/avaliacoes/controle',
+              },
+              {
+                name: 'Assiduidade',
+                icon: BookOpen,
+                path: '/assiduidade/controle',
+              },
+              { name: 'Horários', icon: Calendar, path: '/horarios/listar' },
+              {
+                name: 'Estudantes',
+                icon: Users,
+                path: '/inscricoes/lista-geral',
+              },
             ].map((module) => {
-              const Icon = module.icon;
+              const Icon = module.icon
               return (
                 <a
                   key={module.name}
@@ -146,13 +178,11 @@ export function TestePage() {
                   <Icon className="h-6 w-6 text-primary" />
                   <span className="text-sm font-medium">{module.name}</span>
                 </a>
-              );
+              )
             })}
           </div>
         </CardContent>
       </Card>
     </div>
-  );
-};
-
-
+  )
+}

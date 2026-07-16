@@ -15,11 +15,9 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 
-
 import type { PermissionsEnum } from '@/enums/permissions.enum'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/hooks/auth'
-
 
 export type NavItem = {
   title: string
