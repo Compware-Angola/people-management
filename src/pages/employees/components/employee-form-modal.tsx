@@ -9,62 +9,67 @@ import {
 import { Button } from '@/components/ui/button'
 import { Loader2, Save, X } from 'lucide-react'
 import { useEmployeeFormModal } from '../hooks/use-employee-form-modal'
-import type { Employee } from '@/services/employees/employees.types'
-import { ANGOLA_PROVINCES, BANKS, CURRENCY } from '@/constants'
-import { useCreateEmployeeMutation, useUpdateEmployeeMutation } from '@/hooks/employees'
-
-
+import type { User } from '@/services/users/users.types'
+import { ANGOLA_PROVINCES } from '@/constants'
+import { useCreateUserMutation, useUpdateUserMutation } from '@/hooks/users'
 
 type Props = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  employee?: Employee | null
-
-  
+  user?: User | null
 }
 
-export function EmployeeFormModal({ open, onOpenChange, employee }: Props) {
-  const {mutateAsync: createEmployee} = useCreateEmployeeMutation()
-  const { mutateAsync: updateEmployee } = useUpdateEmployeeMutation()
-  const isEdit = Boolean(employee)
+export function EmployeeFormModal({ open, onOpenChange, user }: Props) {
+  const { mutateAsync: createUser } = useCreateUserMutation()
+  const { mutateAsync: updateUser } = useUpdateUserMutation()
+  const isEdit = Boolean(user)
 
   const { form, canSubmit, isLoading } = useEmployeeFormModal({
-    employee,
+    user,
     onSave: async (values) => {
       const data = {
-        ...values,
+        name: values.name,
+        bi: values.bi,
+        nif: values.nif,
+        phone: values.phone,
         alternativePhone: values.alternativePhone ?? '',
+        province: values.province,
+        municipality: values.municipality,
+        address: values.address,
+        email: values.email,
+        status: values.status,
       }
 
-      if (isEdit && employee) {
-        await updateEmployee({ id: employee.id.toString(), data })
+      if (isEdit && user) {
+        await updateUser({ id: user.id.toString(), data })
       } else {
-        await createEmployee(data)
+        await createUser(data)
       }
+
       onOpenChange(false)
     },
   })
-function handleOpenChange(nextOpen: boolean) {
-  if (!nextOpen) {
-    form.reset()
-  }
 
-  onOpenChange(nextOpen)
-}
+  function handleOpenChange(nextOpen: boolean) {
+    if (!nextOpen) {
+      form.reset()
+    }
+
+    onOpenChange(nextOpen)
+  }
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent
-        className="max-h-[90vh] max-w-2xl! overflow-y-auto">
+      <DialogContent className="max-h-[90vh] max-w-2xl! overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {isEdit ? 'Editar Colaborador' : 'Novo Colaborador'}
+            {isEdit ? 'Editar Utilizador' : 'Novo Utilizador'}
           </DialogTitle>
 
           <DialogDescription>
             {isEdit
-              ? 'Atualize os dados do colaborador.'
-              : 'Preencha os dados para registar um novo colaborador.'}
+              ? 'Atualize os dados do utilizador.'
+              : 'Preencha os dados para registar um novo utilizador.'}
           </DialogDescription>
         </DialogHeader>
 
@@ -123,41 +128,6 @@ function handleOpenChange(nextOpen: boolean) {
               {(field) => <field.TextField label="Email" type="email" />}
             </form.AppField>
           </div>
-
-          {/* Bancos */}
-
-          <div className="grid gap-4 md:grid-cols-2">
-            <form.AppField name="bank">
-              {(field) => (
-                <field.ComboboxField
-                  label="Banco"
-
-                  options={BANKS.map((item) => ({
-                    label: item,
-                    value: item,
-                  }))}
-                />
-              )}
-            </form.AppField>
-
-            <form.AppField name="currency">
-              {(field) => (
-                <field.SelectField
-                  label="Moeda"
-                  options={CURRENCY.map((item) => ({
-                    label: item,
-                    value: item,
-                  }))}
-                />
-              )}
-            </form.AppField>
-            <form.AppField name="iban">
-              {(field) => <field.TextField label="IBAN" />}
-            </form.AppField>
-            <form.AppField name="accountHolder">
-              {(field) => <field.TextField label="Titular da Conta" />}
-            </form.AppField>
-          </div>
           <DialogFooter>
             <Button
               type="button"
@@ -172,7 +142,7 @@ function handleOpenChange(nextOpen: boolean) {
             <Button type="submit" disabled={!canSubmit || isLoading}>
               {isLoading ? <Loader2 className="animate-spin" /> : <Save />}
 
-              {isEdit ? 'Guardar alterações' : 'Criar colaborador'}
+              {isEdit ? 'Guardar alterações' : 'Criar utilizador'}
             </Button>
           </DialogFooter>
         </form>

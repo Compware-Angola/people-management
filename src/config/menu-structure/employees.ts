@@ -3,6 +3,11 @@ import { Users } from 'lucide-react'
 
 export const EMPLOYEES_NAV: NavItem[] = [
   {
+    title: 'Utilizadores',
+    icon: Users,
+    url: '/users',
+  },
+  {
     title: 'Colaboradores',
     icon: Users,
     url: '/employees',
