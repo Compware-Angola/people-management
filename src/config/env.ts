@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 const envSchema = z.object({
   VITE_GP_API_URL: z.url(),
-  VITE_GP_UPLOAD_API_URL: z.url().optional(),
+  VITE_GP_UPLOAD_API_URL: z.url(),
 })
 
 const parsedEnv = envSchema.safeParse(import.meta.env)

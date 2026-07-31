@@ -54,5 +54,3 @@ export type UpdateUserDTO = Partial<CreateUserDTO> & {
 export type CreateUserResponse = {
   message: string
 }
-
-export type UserResponse = User | CreateUserResponse | { message: string } | void
