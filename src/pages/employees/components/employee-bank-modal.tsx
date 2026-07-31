@@ -142,7 +142,7 @@ export function EmployeeBankModal({
     )
   }
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.SyntheticEvent<HTMLFormElement>) {
     event.preventDefault()
 
     if (!canSubmit) return
@@ -189,7 +189,7 @@ export function EmployeeBankModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-xl">
+      <DialogContent className="max-w-2xl!">
         <DialogHeader>
           <DialogTitle>
             {isEdit ? 'Editar colaborador' : 'Cadastrar colaborador'}
