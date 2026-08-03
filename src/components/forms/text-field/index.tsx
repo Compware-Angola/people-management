@@ -10,7 +10,7 @@ type TextFieldProps = {
 } & React.ComponentProps<'input'>
 
 export function TextField(props: TextFieldProps) {
-  const { label = 'Texto', placeholder, ...rest } = props
+  const { label = 'Texto', placeholder, type = 'text', ...rest } = props
   const field = useFieldContext<string>()
   const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
 
@@ -20,7 +20,7 @@ export function TextField(props: TextFieldProps) {
       <Input
         {...rest}
         id={field.name}
-        type="text"
+        type={type}
         value={field.state.value}
         onBlur={field.handleBlur}
         onChange={(e) => field.handleChange(e.target.value)}

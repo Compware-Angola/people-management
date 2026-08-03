@@ -1,4 +1,4 @@
-import { HeadContent, Outlet, createRootRoute } from '@tanstack/react-router'
+import { HeadContent, Outlet, createRootRouteWithContext } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
@@ -6,8 +6,15 @@ import { FormDevtoolsPanel } from '@tanstack/react-form-devtools'
 import '../styles.css'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { Toaster } from 'sonner'
+import type { QueryClient } from '@tanstack/react-query'
+import { authStorage } from '@/lib/auth/auth-storage'
 
-export const Route = createRootRoute({
+interface RouterContext {
+  queryClient: QueryClient
+  authStorage: typeof authStorage
+}
+
+export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootComponent,
 
   head: () => ({

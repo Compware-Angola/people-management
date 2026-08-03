@@ -2,8 +2,8 @@ import ky from 'ky'
 import { env } from '@/config/env'
 import { authStorage } from '@/lib/auth/auth-storage'
 
-export const gpApi = ky.create({
-  prefix: env.VITE_GP_API_URL,
+export const authApi = ky.create({
+  prefix: env.VITE_NEST_AUTH_API_URL,
   hooks: {
     beforeRequest: [
       ({ request }) => {

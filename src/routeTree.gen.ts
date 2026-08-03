@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PublicRouteRouteImport } from './routes/_public/route'
 import { Route as PrivateRouteRouteImport } from './routes/_private/route'
 import { Route as PrivateIndexRouteImport } from './routes/_private/index'
 import { Route as PrivateSplatRouteImport } from './routes/_private/$'
@@ -16,7 +17,13 @@ import { Route as PrivateUsersIndexRouteImport } from './routes/_private/users/i
 import { Route as PrivateEmployeesIndexRouteImport } from './routes/_private/employees/index'
 import { Route as PrivateAdminsIndexRouteImport } from './routes/_private/admins/index'
 import { Route as PrivateAboutIndexRouteImport } from './routes/_private/about/index'
+import { Route as PrivateApplicationsTeachersRouteImport } from './routes/_private/applications/teachers'
+import { Route as PublicAuthLoginIndexRouteImport } from './routes/_public/_auth/login/index'
 
+const PublicRouteRoute = PublicRouteRouteImport.update({
+  id: '/_public',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrivateRouteRoute = PrivateRouteRouteImport.update({
   id: '/_private',
   getParentRoute: () => rootRouteImport,
@@ -51,55 +58,100 @@ const PrivateAboutIndexRoute = PrivateAboutIndexRouteImport.update({
   path: '/about/',
   getParentRoute: () => PrivateRouteRoute,
 } as any)
+const PrivateApplicationsTeachersRoute =
+  PrivateApplicationsTeachersRouteImport.update({
+    id: '/applications/teachers',
+    path: '/applications/teachers',
+    getParentRoute: () => PrivateRouteRoute,
+  } as any)
+const PublicAuthLoginIndexRoute = PublicAuthLoginIndexRouteImport.update({
+  id: '/_auth/login/',
+  path: '/login/',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PrivateIndexRoute
   '/$': typeof PrivateSplatRoute
+  '/applications/teachers': typeof PrivateApplicationsTeachersRoute
   '/about/': typeof PrivateAboutIndexRoute
   '/admins/': typeof PrivateAdminsIndexRoute
   '/employees/': typeof PrivateEmployeesIndexRoute
   '/users/': typeof PrivateUsersIndexRoute
+  '/login/': typeof PublicAuthLoginIndexRoute
 }
 export interface FileRoutesByTo {
-  '/$': typeof PrivateSplatRoute
   '/': typeof PrivateIndexRoute
+  '/$': typeof PrivateSplatRoute
+  '/applications/teachers': typeof PrivateApplicationsTeachersRoute
   '/about': typeof PrivateAboutIndexRoute
   '/admins': typeof PrivateAdminsIndexRoute
   '/employees': typeof PrivateEmployeesIndexRoute
   '/users': typeof PrivateUsersIndexRoute
+  '/login': typeof PublicAuthLoginIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_private': typeof PrivateRouteRouteWithChildren
+  '/_public': typeof PublicRouteRouteWithChildren
   '/_private/$': typeof PrivateSplatRoute
   '/_private/': typeof PrivateIndexRoute
+  '/_private/applications/teachers': typeof PrivateApplicationsTeachersRoute
   '/_private/about/': typeof PrivateAboutIndexRoute
   '/_private/admins/': typeof PrivateAdminsIndexRoute
   '/_private/employees/': typeof PrivateEmployeesIndexRoute
   '/_private/users/': typeof PrivateUsersIndexRoute
+  '/_public/_auth/login/': typeof PublicAuthLoginIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$' | '/about/' | '/admins/' | '/employees/' | '/users/'
+  fullPaths:
+    | '/'
+    | '/$'
+    | '/applications/teachers'
+    | '/about/'
+    | '/admins/'
+    | '/employees/'
+    | '/users/'
+    | '/login/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/$' | '/' | '/about' | '/admins' | '/employees' | '/users'
+  to:
+    | '/'
+    | '/$'
+    | '/applications/teachers'
+    | '/about'
+    | '/admins'
+    | '/employees'
+    | '/users'
+    | '/login'
   id:
     | '__root__'
     | '/_private'
+    | '/_public'
     | '/_private/$'
     | '/_private/'
+    | '/_private/applications/teachers'
     | '/_private/about/'
     | '/_private/admins/'
     | '/_private/employees/'
     | '/_private/users/'
+    | '/_public/_auth/login/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   PrivateRouteRoute: typeof PrivateRouteRouteWithChildren
+  PublicRouteRoute: typeof PublicRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PublicRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_private': {
       id: '/_private'
       path: ''
@@ -149,12 +201,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateAboutIndexRouteImport
       parentRoute: typeof PrivateRouteRoute
     }
+    '/_private/applications/teachers': {
+      id: '/_private/applications/teachers'
+      path: '/applications/teachers'
+      fullPath: '/applications/teachers'
+      preLoaderRoute: typeof PrivateApplicationsTeachersRouteImport
+      parentRoute: typeof PrivateRouteRoute
+    }
+    '/_public/_auth/login/': {
+      id: '/_public/_auth/login/'
+      path: '/login'
+      fullPath: '/login/'
+      preLoaderRoute: typeof PublicAuthLoginIndexRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
   }
 }
 
 interface PrivateRouteRouteChildren {
   PrivateSplatRoute: typeof PrivateSplatRoute
   PrivateIndexRoute: typeof PrivateIndexRoute
+  PrivateApplicationsTeachersRoute: typeof PrivateApplicationsTeachersRoute
   PrivateAboutIndexRoute: typeof PrivateAboutIndexRoute
   PrivateAdminsIndexRoute: typeof PrivateAdminsIndexRoute
   PrivateEmployeesIndexRoute: typeof PrivateEmployeesIndexRoute
@@ -164,6 +231,7 @@ interface PrivateRouteRouteChildren {
 const PrivateRouteRouteChildren: PrivateRouteRouteChildren = {
   PrivateSplatRoute: PrivateSplatRoute,
   PrivateIndexRoute: PrivateIndexRoute,
+  PrivateApplicationsTeachersRoute: PrivateApplicationsTeachersRoute,
   PrivateAboutIndexRoute: PrivateAboutIndexRoute,
   PrivateAdminsIndexRoute: PrivateAdminsIndexRoute,
   PrivateEmployeesIndexRoute: PrivateEmployeesIndexRoute,
@@ -174,8 +242,21 @@ const PrivateRouteRouteWithChildren = PrivateRouteRoute._addFileChildren(
   PrivateRouteRouteChildren,
 )
 
+interface PublicRouteRouteChildren {
+  PublicAuthLoginIndexRoute: typeof PublicAuthLoginIndexRoute
+}
+
+const PublicRouteRouteChildren: PublicRouteRouteChildren = {
+  PublicAuthLoginIndexRoute: PublicAuthLoginIndexRoute,
+}
+
+const PublicRouteRouteWithChildren = PublicRouteRoute._addFileChildren(
+  PublicRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   PrivateRouteRoute: PrivateRouteRouteWithChildren,
+  PublicRouteRoute: PublicRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
