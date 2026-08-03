@@ -2,7 +2,6 @@ import { z } from 'zod'
 
 const envSchema = z.object({
   VITE_NEST_AUTH_API_URL: z.url(),
-  VITE_GA_API_URL: z.url(),
   VITE_GP_API_URL: z.url(),
   VITE_GP_UPLOAD_API_URL: z.url(),
 })
