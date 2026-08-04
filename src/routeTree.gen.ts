@@ -13,8 +13,11 @@ import { Route as PublicRouteRouteImport } from './routes/_public/route'
 import { Route as PrivateRouteRouteImport } from './routes/_private/route'
 import { Route as PrivateIndexRouteImport } from './routes/_private/index'
 import { Route as PrivateSplatRouteImport } from './routes/_private/$'
+import { Route as PrivateVacationsIndexRouteImport } from './routes/_private/vacations/index'
 import { Route as PrivateUsersIndexRouteImport } from './routes/_private/users/index'
 import { Route as PrivateEmployeesIndexRouteImport } from './routes/_private/employees/index'
+import { Route as PrivateBiometricsIndexRouteImport } from './routes/_private/biometrics/index'
+import { Route as PrivateAttendanceIndexRouteImport } from './routes/_private/attendance/index'
 import { Route as PrivateAdminsIndexRouteImport } from './routes/_private/admins/index'
 import { Route as PrivateAboutIndexRouteImport } from './routes/_private/about/index'
 import { Route as PublicAuthLoginIndexRouteImport } from './routes/_public/_auth/login/index'
@@ -37,6 +40,11 @@ const PrivateSplatRoute = PrivateSplatRouteImport.update({
   path: '/$',
   getParentRoute: () => PrivateRouteRoute,
 } as any)
+const PrivateVacationsIndexRoute = PrivateVacationsIndexRouteImport.update({
+  id: '/vacations/',
+  path: '/vacations/',
+  getParentRoute: () => PrivateRouteRoute,
+} as any)
 const PrivateUsersIndexRoute = PrivateUsersIndexRouteImport.update({
   id: '/users/',
   path: '/users/',
@@ -45,6 +53,16 @@ const PrivateUsersIndexRoute = PrivateUsersIndexRouteImport.update({
 const PrivateEmployeesIndexRoute = PrivateEmployeesIndexRouteImport.update({
   id: '/employees/',
   path: '/employees/',
+  getParentRoute: () => PrivateRouteRoute,
+} as any)
+const PrivateBiometricsIndexRoute = PrivateBiometricsIndexRouteImport.update({
+  id: '/biometrics/',
+  path: '/biometrics/',
+  getParentRoute: () => PrivateRouteRoute,
+} as any)
+const PrivateAttendanceIndexRoute = PrivateAttendanceIndexRouteImport.update({
+  id: '/attendance/',
+  path: '/attendance/',
   getParentRoute: () => PrivateRouteRoute,
 } as any)
 const PrivateAdminsIndexRoute = PrivateAdminsIndexRouteImport.update({
@@ -68,8 +86,11 @@ export interface FileRoutesByFullPath {
   '/$': typeof PrivateSplatRoute
   '/about/': typeof PrivateAboutIndexRoute
   '/admins/': typeof PrivateAdminsIndexRoute
+  '/attendance/': typeof PrivateAttendanceIndexRoute
+  '/biometrics/': typeof PrivateBiometricsIndexRoute
   '/employees/': typeof PrivateEmployeesIndexRoute
   '/users/': typeof PrivateUsersIndexRoute
+  '/vacations/': typeof PrivateVacationsIndexRoute
   '/login/': typeof PublicAuthLoginIndexRoute
 }
 export interface FileRoutesByTo {
@@ -77,8 +98,11 @@ export interface FileRoutesByTo {
   '/$': typeof PrivateSplatRoute
   '/about': typeof PrivateAboutIndexRoute
   '/admins': typeof PrivateAdminsIndexRoute
+  '/attendance': typeof PrivateAttendanceIndexRoute
+  '/biometrics': typeof PrivateBiometricsIndexRoute
   '/employees': typeof PrivateEmployeesIndexRoute
   '/users': typeof PrivateUsersIndexRoute
+  '/vacations': typeof PrivateVacationsIndexRoute
   '/login': typeof PublicAuthLoginIndexRoute
 }
 export interface FileRoutesById {
@@ -89,16 +113,38 @@ export interface FileRoutesById {
   '/_private/': typeof PrivateIndexRoute
   '/_private/about/': typeof PrivateAboutIndexRoute
   '/_private/admins/': typeof PrivateAdminsIndexRoute
+  '/_private/attendance/': typeof PrivateAttendanceIndexRoute
+  '/_private/biometrics/': typeof PrivateBiometricsIndexRoute
   '/_private/employees/': typeof PrivateEmployeesIndexRoute
   '/_private/users/': typeof PrivateUsersIndexRoute
+  '/_private/vacations/': typeof PrivateVacationsIndexRoute
   '/_public/_auth/login/': typeof PublicAuthLoginIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/$' | '/about/' | '/admins/' | '/employees/' | '/users/' | '/login/'
+    | '/'
+    | '/$'
+    | '/about/'
+    | '/admins/'
+    | '/attendance/'
+    | '/biometrics/'
+    | '/employees/'
+    | '/users/'
+    | '/vacations/'
+    | '/login/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$' | '/about' | '/admins' | '/employees' | '/users' | '/login'
+  to:
+    | '/'
+    | '/$'
+    | '/about'
+    | '/admins'
+    | '/attendance'
+    | '/biometrics'
+    | '/employees'
+    | '/users'
+    | '/vacations'
+    | '/login'
   id:
     | '__root__'
     | '/_private'
@@ -107,8 +153,11 @@ export interface FileRouteTypes {
     | '/_private/'
     | '/_private/about/'
     | '/_private/admins/'
+    | '/_private/attendance/'
+    | '/_private/biometrics/'
     | '/_private/employees/'
     | '/_private/users/'
+    | '/_private/vacations/'
     | '/_public/_auth/login/'
   fileRoutesById: FileRoutesById
 }
@@ -147,6 +196,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateSplatRouteImport
       parentRoute: typeof PrivateRouteRoute
     }
+    '/_private/vacations/': {
+      id: '/_private/vacations/'
+      path: '/vacations'
+      fullPath: '/vacations/'
+      preLoaderRoute: typeof PrivateVacationsIndexRouteImport
+      parentRoute: typeof PrivateRouteRoute
+    }
     '/_private/users/': {
       id: '/_private/users/'
       path: '/users'
@@ -159,6 +215,20 @@ declare module '@tanstack/react-router' {
       path: '/employees'
       fullPath: '/employees/'
       preLoaderRoute: typeof PrivateEmployeesIndexRouteImport
+      parentRoute: typeof PrivateRouteRoute
+    }
+    '/_private/biometrics/': {
+      id: '/_private/biometrics/'
+      path: '/biometrics'
+      fullPath: '/biometrics/'
+      preLoaderRoute: typeof PrivateBiometricsIndexRouteImport
+      parentRoute: typeof PrivateRouteRoute
+    }
+    '/_private/attendance/': {
+      id: '/_private/attendance/'
+      path: '/attendance'
+      fullPath: '/attendance/'
+      preLoaderRoute: typeof PrivateAttendanceIndexRouteImport
       parentRoute: typeof PrivateRouteRoute
     }
     '/_private/admins/': {
@@ -190,8 +260,11 @@ interface PrivateRouteRouteChildren {
   PrivateIndexRoute: typeof PrivateIndexRoute
   PrivateAboutIndexRoute: typeof PrivateAboutIndexRoute
   PrivateAdminsIndexRoute: typeof PrivateAdminsIndexRoute
+  PrivateAttendanceIndexRoute: typeof PrivateAttendanceIndexRoute
+  PrivateBiometricsIndexRoute: typeof PrivateBiometricsIndexRoute
   PrivateEmployeesIndexRoute: typeof PrivateEmployeesIndexRoute
   PrivateUsersIndexRoute: typeof PrivateUsersIndexRoute
+  PrivateVacationsIndexRoute: typeof PrivateVacationsIndexRoute
 }
 
 const PrivateRouteRouteChildren: PrivateRouteRouteChildren = {
@@ -199,8 +272,11 @@ const PrivateRouteRouteChildren: PrivateRouteRouteChildren = {
   PrivateIndexRoute: PrivateIndexRoute,
   PrivateAboutIndexRoute: PrivateAboutIndexRoute,
   PrivateAdminsIndexRoute: PrivateAdminsIndexRoute,
+  PrivateAttendanceIndexRoute: PrivateAttendanceIndexRoute,
+  PrivateBiometricsIndexRoute: PrivateBiometricsIndexRoute,
   PrivateEmployeesIndexRoute: PrivateEmployeesIndexRoute,
   PrivateUsersIndexRoute: PrivateUsersIndexRoute,
+  PrivateVacationsIndexRoute: PrivateVacationsIndexRoute,
 }
 
 const PrivateRouteRouteWithChildren = PrivateRouteRoute._addFileChildren(

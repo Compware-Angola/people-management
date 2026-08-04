@@ -4,13 +4,17 @@ import {
   SidebarRail,
   SidebarProvider,
   SidebarInset,
-  SidebarFooter,
 } from '../../ui/sidebar'
 import { Header } from './header'
 import { NavMain } from './nav-main'
 import { DashboardSidebarHeader } from './sidebar-header'
-import { NavUser } from './nav-user'
-import { DASHBOARD_NAV, EMPLOYEES_NAV } from '@/config/menu-structure'
+import {
+  ATTENDANCE_NAV,
+  BIOMETRICS_NAV,
+  DASHBOARD_NAV,
+  EMPLOYEES_NAV,
+  VACATIONS_NAV,
+} from '@/config/menu-structure'
 
 export function DashboardLayout({
   ...props
@@ -22,10 +26,10 @@ export function DashboardLayout({
         <SidebarContent>
           <NavMain items={DASHBOARD_NAV} />
           <NavMain items={EMPLOYEES_NAV} groupLabel="Colaboradores" />
+          <NavMain items={ATTENDANCE_NAV} groupLabel="Assiduidade" />
+          <NavMain items={VACATIONS_NAV} groupLabel="Férias" />
+          <NavMain items={BIOMETRICS_NAV} groupLabel="Biometria" />
         </SidebarContent>
-        <SidebarFooter>
-          <NavUser />
-        </SidebarFooter>
         <SidebarRail />
       </Sidebar>
       <SidebarInset>

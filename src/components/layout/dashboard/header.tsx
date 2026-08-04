@@ -1,5 +1,6 @@
 // import ThemeToggle from '../../common/theme-toggle'
 import { SidebarTrigger } from '../../ui/sidebar'
+import { UserMenu } from './user-menu'
 
 export function Header() {
   return (
@@ -10,6 +11,7 @@ export function Header() {
 
           <div className="ml-auto flex items-center gap-2 md:gap-4">
             {/* <ThemeToggle /> */}
+            <UserMenu />
           </div>
         </div>
       </header>
