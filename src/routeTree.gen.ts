@@ -13,13 +13,15 @@ import { Route as PublicRouteRouteImport } from './routes/_public/route'
 import { Route as PrivateRouteRouteImport } from './routes/_private/route'
 import { Route as PrivateIndexRouteImport } from './routes/_private/index'
 import { Route as PrivateSplatRouteImport } from './routes/_private/$'
+import { Route as PrivateBiometricsRouteRouteImport } from './routes/_private/biometrics/route'
 import { Route as PrivateVacationsIndexRouteImport } from './routes/_private/vacations/index'
 import { Route as PrivateUsersIndexRouteImport } from './routes/_private/users/index'
 import { Route as PrivateEmployeesIndexRouteImport } from './routes/_private/employees/index'
-import { Route as PrivateBiometricsIndexRouteImport } from './routes/_private/biometrics/index'
 import { Route as PrivateAttendanceIndexRouteImport } from './routes/_private/attendance/index'
 import { Route as PrivateAdminsIndexRouteImport } from './routes/_private/admins/index'
 import { Route as PrivateAboutIndexRouteImport } from './routes/_private/about/index'
+import { Route as PrivateBiometricsEventsRouteImport } from './routes/_private/biometrics/events'
+import { Route as PrivateBiometricsEquipmentsRouteImport } from './routes/_private/biometrics/equipments'
 import { Route as PublicAuthLoginIndexRouteImport } from './routes/_public/_auth/login/index'
 
 const PublicRouteRoute = PublicRouteRouteImport.update({
@@ -40,6 +42,11 @@ const PrivateSplatRoute = PrivateSplatRouteImport.update({
   path: '/$',
   getParentRoute: () => PrivateRouteRoute,
 } as any)
+const PrivateBiometricsRouteRoute = PrivateBiometricsRouteRouteImport.update({
+  id: '/biometrics',
+  path: '/biometrics',
+  getParentRoute: () => PrivateRouteRoute,
+} as any)
 const PrivateVacationsIndexRoute = PrivateVacationsIndexRouteImport.update({
   id: '/vacations/',
   path: '/vacations/',
@@ -53,11 +60,6 @@ const PrivateUsersIndexRoute = PrivateUsersIndexRouteImport.update({
 const PrivateEmployeesIndexRoute = PrivateEmployeesIndexRouteImport.update({
   id: '/employees/',
   path: '/employees/',
-  getParentRoute: () => PrivateRouteRoute,
-} as any)
-const PrivateBiometricsIndexRoute = PrivateBiometricsIndexRouteImport.update({
-  id: '/biometrics/',
-  path: '/biometrics/',
   getParentRoute: () => PrivateRouteRoute,
 } as any)
 const PrivateAttendanceIndexRoute = PrivateAttendanceIndexRouteImport.update({
@@ -75,6 +77,17 @@ const PrivateAboutIndexRoute = PrivateAboutIndexRouteImport.update({
   path: '/about/',
   getParentRoute: () => PrivateRouteRoute,
 } as any)
+const PrivateBiometricsEventsRoute = PrivateBiometricsEventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => PrivateBiometricsRouteRoute,
+} as any)
+const PrivateBiometricsEquipmentsRoute =
+  PrivateBiometricsEquipmentsRouteImport.update({
+    id: '/equipments',
+    path: '/equipments',
+    getParentRoute: () => PrivateBiometricsRouteRoute,
+  } as any)
 const PublicAuthLoginIndexRoute = PublicAuthLoginIndexRouteImport.update({
   id: '/_auth/login/',
   path: '/login/',
@@ -83,11 +96,13 @@ const PublicAuthLoginIndexRoute = PublicAuthLoginIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof PrivateIndexRoute
+  '/biometrics': typeof PrivateBiometricsRouteRouteWithChildren
   '/$': typeof PrivateSplatRoute
+  '/biometrics/equipments': typeof PrivateBiometricsEquipmentsRoute
+  '/biometrics/events': typeof PrivateBiometricsEventsRoute
   '/about/': typeof PrivateAboutIndexRoute
   '/admins/': typeof PrivateAdminsIndexRoute
   '/attendance/': typeof PrivateAttendanceIndexRoute
-  '/biometrics/': typeof PrivateBiometricsIndexRoute
   '/employees/': typeof PrivateEmployeesIndexRoute
   '/users/': typeof PrivateUsersIndexRoute
   '/vacations/': typeof PrivateVacationsIndexRoute
@@ -95,11 +110,13 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof PrivateIndexRoute
+  '/biometrics': typeof PrivateBiometricsRouteRouteWithChildren
   '/$': typeof PrivateSplatRoute
+  '/biometrics/equipments': typeof PrivateBiometricsEquipmentsRoute
+  '/biometrics/events': typeof PrivateBiometricsEventsRoute
   '/about': typeof PrivateAboutIndexRoute
   '/admins': typeof PrivateAdminsIndexRoute
   '/attendance': typeof PrivateAttendanceIndexRoute
-  '/biometrics': typeof PrivateBiometricsIndexRoute
   '/employees': typeof PrivateEmployeesIndexRoute
   '/users': typeof PrivateUsersIndexRoute
   '/vacations': typeof PrivateVacationsIndexRoute
@@ -109,12 +126,14 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_private': typeof PrivateRouteRouteWithChildren
   '/_public': typeof PublicRouteRouteWithChildren
+  '/_private/biometrics': typeof PrivateBiometricsRouteRouteWithChildren
   '/_private/$': typeof PrivateSplatRoute
   '/_private/': typeof PrivateIndexRoute
+  '/_private/biometrics/equipments': typeof PrivateBiometricsEquipmentsRoute
+  '/_private/biometrics/events': typeof PrivateBiometricsEventsRoute
   '/_private/about/': typeof PrivateAboutIndexRoute
   '/_private/admins/': typeof PrivateAdminsIndexRoute
   '/_private/attendance/': typeof PrivateAttendanceIndexRoute
-  '/_private/biometrics/': typeof PrivateBiometricsIndexRoute
   '/_private/employees/': typeof PrivateEmployeesIndexRoute
   '/_private/users/': typeof PrivateUsersIndexRoute
   '/_private/vacations/': typeof PrivateVacationsIndexRoute
@@ -124,11 +143,13 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/biometrics'
     | '/$'
+    | '/biometrics/equipments'
+    | '/biometrics/events'
     | '/about/'
     | '/admins/'
     | '/attendance/'
-    | '/biometrics/'
     | '/employees/'
     | '/users/'
     | '/vacations/'
@@ -136,11 +157,13 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/biometrics'
     | '/$'
+    | '/biometrics/equipments'
+    | '/biometrics/events'
     | '/about'
     | '/admins'
     | '/attendance'
-    | '/biometrics'
     | '/employees'
     | '/users'
     | '/vacations'
@@ -149,12 +172,14 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_private'
     | '/_public'
+    | '/_private/biometrics'
     | '/_private/$'
     | '/_private/'
+    | '/_private/biometrics/equipments'
+    | '/_private/biometrics/events'
     | '/_private/about/'
     | '/_private/admins/'
     | '/_private/attendance/'
-    | '/_private/biometrics/'
     | '/_private/employees/'
     | '/_private/users/'
     | '/_private/vacations/'
@@ -196,6 +221,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateSplatRouteImport
       parentRoute: typeof PrivateRouteRoute
     }
+    '/_private/biometrics': {
+      id: '/_private/biometrics'
+      path: '/biometrics'
+      fullPath: '/biometrics'
+      preLoaderRoute: typeof PrivateBiometricsRouteRouteImport
+      parentRoute: typeof PrivateRouteRoute
+    }
     '/_private/vacations/': {
       id: '/_private/vacations/'
       path: '/vacations'
@@ -215,13 +247,6 @@ declare module '@tanstack/react-router' {
       path: '/employees'
       fullPath: '/employees/'
       preLoaderRoute: typeof PrivateEmployeesIndexRouteImport
-      parentRoute: typeof PrivateRouteRoute
-    }
-    '/_private/biometrics/': {
-      id: '/_private/biometrics/'
-      path: '/biometrics'
-      fullPath: '/biometrics/'
-      preLoaderRoute: typeof PrivateBiometricsIndexRouteImport
       parentRoute: typeof PrivateRouteRoute
     }
     '/_private/attendance/': {
@@ -245,6 +270,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateAboutIndexRouteImport
       parentRoute: typeof PrivateRouteRoute
     }
+    '/_private/biometrics/events': {
+      id: '/_private/biometrics/events'
+      path: '/events'
+      fullPath: '/biometrics/events'
+      preLoaderRoute: typeof PrivateBiometricsEventsRouteImport
+      parentRoute: typeof PrivateBiometricsRouteRoute
+    }
+    '/_private/biometrics/equipments': {
+      id: '/_private/biometrics/equipments'
+      path: '/equipments'
+      fullPath: '/biometrics/equipments'
+      preLoaderRoute: typeof PrivateBiometricsEquipmentsRouteImport
+      parentRoute: typeof PrivateBiometricsRouteRoute
+    }
     '/_public/_auth/login/': {
       id: '/_public/_auth/login/'
       path: '/login'
@@ -255,25 +294,41 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface PrivateBiometricsRouteRouteChildren {
+  PrivateBiometricsEquipmentsRoute: typeof PrivateBiometricsEquipmentsRoute
+  PrivateBiometricsEventsRoute: typeof PrivateBiometricsEventsRoute
+}
+
+const PrivateBiometricsRouteRouteChildren: PrivateBiometricsRouteRouteChildren =
+  {
+    PrivateBiometricsEquipmentsRoute: PrivateBiometricsEquipmentsRoute,
+    PrivateBiometricsEventsRoute: PrivateBiometricsEventsRoute,
+  }
+
+const PrivateBiometricsRouteRouteWithChildren =
+  PrivateBiometricsRouteRoute._addFileChildren(
+    PrivateBiometricsRouteRouteChildren,
+  )
+
 interface PrivateRouteRouteChildren {
+  PrivateBiometricsRouteRoute: typeof PrivateBiometricsRouteRouteWithChildren
   PrivateSplatRoute: typeof PrivateSplatRoute
   PrivateIndexRoute: typeof PrivateIndexRoute
   PrivateAboutIndexRoute: typeof PrivateAboutIndexRoute
   PrivateAdminsIndexRoute: typeof PrivateAdminsIndexRoute
   PrivateAttendanceIndexRoute: typeof PrivateAttendanceIndexRoute
-  PrivateBiometricsIndexRoute: typeof PrivateBiometricsIndexRoute
   PrivateEmployeesIndexRoute: typeof PrivateEmployeesIndexRoute
   PrivateUsersIndexRoute: typeof PrivateUsersIndexRoute
   PrivateVacationsIndexRoute: typeof PrivateVacationsIndexRoute
 }
 
 const PrivateRouteRouteChildren: PrivateRouteRouteChildren = {
+  PrivateBiometricsRouteRoute: PrivateBiometricsRouteRouteWithChildren,
   PrivateSplatRoute: PrivateSplatRoute,
   PrivateIndexRoute: PrivateIndexRoute,
   PrivateAboutIndexRoute: PrivateAboutIndexRoute,
   PrivateAdminsIndexRoute: PrivateAdminsIndexRoute,
   PrivateAttendanceIndexRoute: PrivateAttendanceIndexRoute,
-  PrivateBiometricsIndexRoute: PrivateBiometricsIndexRoute,
   PrivateEmployeesIndexRoute: PrivateEmployeesIndexRoute,
   PrivateUsersIndexRoute: PrivateUsersIndexRoute,
   PrivateVacationsIndexRoute: PrivateVacationsIndexRoute,

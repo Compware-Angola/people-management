@@ -11,7 +11,6 @@ export const Route = createFileRoute('/_private')({
         search: { redirect: location.href },
       })
     }
-
     try {
       const { isAuthenticated, user } =
         await context.queryClient.ensureQueryData(currentUserQueryOptions())

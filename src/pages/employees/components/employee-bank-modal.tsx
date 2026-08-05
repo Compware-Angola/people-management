@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { Loader2, Paperclip, Plus, Save, Trash2, X } from 'lucide-react'
-
 import { BANKS, CURRENCY } from '@/constants'
 import {
   useAddEmployeeFileMutation,
