@@ -1,2 +1,6 @@
+export * from './attendance'
+export * from './biometrics'
 export * from './dashboard'
 export * from './employees'
+export * from './vacations'
+export * from './users'

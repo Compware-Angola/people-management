@@ -1,5 +1,6 @@
 export type Employee = {
   id: number
+  userId?: number
   name: string
   bi: string
   nif: string
@@ -13,6 +14,28 @@ export type Employee = {
   iban: string
   accountHolder: string
   currency: string
+  status: number
+  createdAt: string
+  files?: EmployeeFile[]
+}
+
+export type EmployeeFileType =
+  | 'BI'
+  | 'NIF'
+  | 'CONTRATO'
+  | 'CURRICULO'
+  | 'CERTIFICADO'
+  | 'DIPLOMA'
+  | 'DECLARACAO'
+  | 'FOTO'
+  | 'OUTRO'
+
+export type EmployeeFile = {
+  id: number
+  type: EmployeeFileType
+  originalName: string
+  path: string
+  description?: string | null
   status: number
   createdAt: string
 }
@@ -34,7 +57,23 @@ export type EmployeeListParams = {
   limit?: number
 }
 
-export type CreateEmployeeDTO = Omit<Employee, 'createdAt' | "id">
+export type CreateEmployeeDTO = {
+  userId: number
+  bank: string
+  iban: string
+  accountHolder: string
+  currency: string
+  status?: number
+}
+
 export type UpdateEmployeeDTO = Partial<CreateEmployeeDTO>
+
+export type CreateEmployeeFileDTO = {
+  userId: number
+  type: EmployeeFileType
+  path: string
+  originalName: string
+  description?: string
+}
 
 export type EmployeeResponse = void

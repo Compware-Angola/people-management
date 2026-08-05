@@ -4,8 +4,8 @@ import { useEffect } from 'react'
 import { z } from 'zod'
 
 import { useAppForm } from '@/components/forms'
-import { ibanSchema, biSchema, nifSchema } from '@/lib/zod/schemas'
-import type { Employee } from '@/services/employees/employees.types'
+import { biSchema, nifSchema } from '@/lib/zod/schemas'
+import type { User } from '@/services/users/users.types'
 
 export const employeeSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
@@ -17,10 +17,6 @@ export const employeeSchema = z.object({
   municipality: z.string().min(1, 'Município é obrigatório'),
   address: z.string().min(1, 'Morada é obrigatória'),
   email: z.email('Email inválido').min(1, 'Email é obrigatório'),
-  bank: z.string().min(1, 'Banco é obrigatório'),
-  iban: ibanSchema,
-  accountHolder: z.string().min(1, 'Titular da conta é obrigatório'),
-  currency: z.string(),
   status: z.number(),
 })
 
@@ -36,20 +32,16 @@ const defaultValues: EmployeeFormValues = {
   municipality: '',
   address: '',
   email: '',
-  bank: '',
-  iban: '',
-  accountHolder: '',
-  currency: 'AOA',
   status: 1,
 }
 
 interface UseEmployeeFormModalProps {
-  employee?: Employee | null
+  user?: User | null
   onSave: (values: EmployeeFormValues) => Promise<void>
 }
 
 export function useEmployeeFormModal({
-  employee,
+  user,
   onSave,
 }: UseEmployeeFormModalProps) {
   const form = useAppForm({
@@ -64,13 +56,23 @@ export function useEmployeeFormModal({
   })
 
   useEffect(() => {
-    if (employee) {
-      const { id: _id, createdAt: _createdAt, ...rest } = employee
-      form.reset(rest)
+    if (user) {
+      form.reset({
+        name: user.name,
+        bi: user.bi,
+        nif: user.nif ?? '',
+        phone: user.phone,
+        alternativePhone: user.alternativePhone ?? null,
+        province: user.province,
+        municipality: user.municipality,
+        address: user.address,
+        email: user.email,
+        status: user.status,
+      })
     } else {
       form.reset(defaultValues)
     }
-  }, [employee, form])
+  }, [user, form])
 
   return {
     form,

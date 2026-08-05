@@ -1,4 +1,3 @@
-import { PermissionsEnum } from '@/enums/permissions.enum'
 import type { NavItem } from '@/components/layout/dashboard/nav-main'
 import { LayoutDashboard } from 'lucide-react'
 
