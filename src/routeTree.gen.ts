@@ -15,6 +15,7 @@ import { Route as PrivateIndexRouteImport } from './routes/_private/index'
 import { Route as PrivateSplatRouteImport } from './routes/_private/$'
 import { Route as PrivateVacationsIndexRouteImport } from './routes/_private/vacations/index'
 import { Route as PrivateUsersIndexRouteImport } from './routes/_private/users/index'
+import { Route as PrivateLeavesIndexRouteImport } from './routes/_private/leaves/index'
 import { Route as PrivateEmployeesIndexRouteImport } from './routes/_private/employees/index'
 import { Route as PrivateBiometricsIndexRouteImport } from './routes/_private/biometrics/index'
 import { Route as PrivateAttendanceIndexRouteImport } from './routes/_private/attendance/index'
@@ -48,6 +49,11 @@ const PrivateVacationsIndexRoute = PrivateVacationsIndexRouteImport.update({
 const PrivateUsersIndexRoute = PrivateUsersIndexRouteImport.update({
   id: '/users/',
   path: '/users/',
+  getParentRoute: () => PrivateRouteRoute,
+} as any)
+const PrivateLeavesIndexRoute = PrivateLeavesIndexRouteImport.update({
+  id: '/leaves/',
+  path: '/leaves/',
   getParentRoute: () => PrivateRouteRoute,
 } as any)
 const PrivateEmployeesIndexRoute = PrivateEmployeesIndexRouteImport.update({
@@ -89,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/attendance/': typeof PrivateAttendanceIndexRoute
   '/biometrics/': typeof PrivateBiometricsIndexRoute
   '/employees/': typeof PrivateEmployeesIndexRoute
+  '/leaves/': typeof PrivateLeavesIndexRoute
   '/users/': typeof PrivateUsersIndexRoute
   '/vacations/': typeof PrivateVacationsIndexRoute
   '/login/': typeof PublicAuthLoginIndexRoute
@@ -101,6 +108,7 @@ export interface FileRoutesByTo {
   '/attendance': typeof PrivateAttendanceIndexRoute
   '/biometrics': typeof PrivateBiometricsIndexRoute
   '/employees': typeof PrivateEmployeesIndexRoute
+  '/leaves': typeof PrivateLeavesIndexRoute
   '/users': typeof PrivateUsersIndexRoute
   '/vacations': typeof PrivateVacationsIndexRoute
   '/login': typeof PublicAuthLoginIndexRoute
@@ -116,6 +124,7 @@ export interface FileRoutesById {
   '/_private/attendance/': typeof PrivateAttendanceIndexRoute
   '/_private/biometrics/': typeof PrivateBiometricsIndexRoute
   '/_private/employees/': typeof PrivateEmployeesIndexRoute
+  '/_private/leaves/': typeof PrivateLeavesIndexRoute
   '/_private/users/': typeof PrivateUsersIndexRoute
   '/_private/vacations/': typeof PrivateVacationsIndexRoute
   '/_public/_auth/login/': typeof PublicAuthLoginIndexRoute
@@ -130,6 +139,7 @@ export interface FileRouteTypes {
     | '/attendance/'
     | '/biometrics/'
     | '/employees/'
+    | '/leaves/'
     | '/users/'
     | '/vacations/'
     | '/login/'
@@ -142,6 +152,7 @@ export interface FileRouteTypes {
     | '/attendance'
     | '/biometrics'
     | '/employees'
+    | '/leaves'
     | '/users'
     | '/vacations'
     | '/login'
@@ -156,6 +167,7 @@ export interface FileRouteTypes {
     | '/_private/attendance/'
     | '/_private/biometrics/'
     | '/_private/employees/'
+    | '/_private/leaves/'
     | '/_private/users/'
     | '/_private/vacations/'
     | '/_public/_auth/login/'
@@ -208,6 +220,13 @@ declare module '@tanstack/react-router' {
       path: '/users'
       fullPath: '/users/'
       preLoaderRoute: typeof PrivateUsersIndexRouteImport
+      parentRoute: typeof PrivateRouteRoute
+    }
+    '/_private/leaves/': {
+      id: '/_private/leaves/'
+      path: '/leaves'
+      fullPath: '/leaves/'
+      preLoaderRoute: typeof PrivateLeavesIndexRouteImport
       parentRoute: typeof PrivateRouteRoute
     }
     '/_private/employees/': {
@@ -263,6 +282,7 @@ interface PrivateRouteRouteChildren {
   PrivateAttendanceIndexRoute: typeof PrivateAttendanceIndexRoute
   PrivateBiometricsIndexRoute: typeof PrivateBiometricsIndexRoute
   PrivateEmployeesIndexRoute: typeof PrivateEmployeesIndexRoute
+  PrivateLeavesIndexRoute: typeof PrivateLeavesIndexRoute
   PrivateUsersIndexRoute: typeof PrivateUsersIndexRoute
   PrivateVacationsIndexRoute: typeof PrivateVacationsIndexRoute
 }
@@ -275,6 +295,7 @@ const PrivateRouteRouteChildren: PrivateRouteRouteChildren = {
   PrivateAttendanceIndexRoute: PrivateAttendanceIndexRoute,
   PrivateBiometricsIndexRoute: PrivateBiometricsIndexRoute,
   PrivateEmployeesIndexRoute: PrivateEmployeesIndexRoute,
+  PrivateLeavesIndexRoute: PrivateLeavesIndexRoute,
   PrivateUsersIndexRoute: PrivateUsersIndexRoute,
   PrivateVacationsIndexRoute: PrivateVacationsIndexRoute,
 }

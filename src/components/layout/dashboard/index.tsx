@@ -13,6 +13,7 @@ import {
   BIOMETRICS_NAV,
   DASHBOARD_NAV,
   EMPLOYEES_NAV,
+  LEAVES_NAV,
   VACATIONS_NAV,
 } from '@/config/menu-structure'
 
@@ -28,6 +29,7 @@ export function DashboardLayout({
           <NavMain items={EMPLOYEES_NAV} groupLabel="Colaboradores" />
           <NavMain items={ATTENDANCE_NAV} groupLabel="Assiduidade" />
           <NavMain items={VACATIONS_NAV} groupLabel="Férias" />
+          <NavMain items={LEAVES_NAV} groupLabel="Licenças" />
           <NavMain items={BIOMETRICS_NAV} groupLabel="Biometria" />
         </SidebarContent>
         <SidebarRail />
