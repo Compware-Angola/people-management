@@ -20,6 +20,10 @@ export type DepartmentsListResponse = {
   meta: PaginationMeta
 }
 
+export type MyDepartmentsResponse = {
+  departments: Department[]
+}
+
 export type DepartmentsListParams = {
   page?: number
   limit?: number

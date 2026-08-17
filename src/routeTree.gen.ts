@@ -19,6 +19,8 @@ import { Route as PrivateVacanciesIndexRouteImport } from './routes/_private/vac
 import { Route as PrivateUsersIndexRouteImport } from './routes/_private/users/index'
 import { Route as PrivateRequisitionsIndexRouteImport } from './routes/_private/requisitions/index'
 import { Route as PrivatePositionsIndexRouteImport } from './routes/_private/positions/index'
+import { Route as PrivatePermissionsIndexRouteImport } from './routes/_private/permissions/index'
+import { Route as PrivatePermissionGroupsIndexRouteImport } from './routes/_private/permission-groups/index'
 import { Route as PrivateEmployeesIndexRouteImport } from './routes/_private/employees/index'
 import { Route as PrivateDepartmentsIndexRouteImport } from './routes/_private/departments/index'
 import { Route as PrivateCostCentersIndexRouteImport } from './routes/_private/cost-centers/index'
@@ -78,6 +80,17 @@ const PrivatePositionsIndexRoute = PrivatePositionsIndexRouteImport.update({
   path: '/positions/',
   getParentRoute: () => PrivateRouteRoute,
 } as any)
+const PrivatePermissionsIndexRoute = PrivatePermissionsIndexRouteImport.update({
+  id: '/permissions/',
+  path: '/permissions/',
+  getParentRoute: () => PrivateRouteRoute,
+} as any)
+const PrivatePermissionGroupsIndexRoute =
+  PrivatePermissionGroupsIndexRouteImport.update({
+    id: '/permission-groups/',
+    path: '/permission-groups/',
+    getParentRoute: () => PrivateRouteRoute,
+  } as any)
 const PrivateEmployeesIndexRoute = PrivateEmployeesIndexRouteImport.update({
   id: '/employees/',
   path: '/employees/',
@@ -137,6 +150,8 @@ export interface FileRoutesByFullPath {
   '/cost-centers/': typeof PrivateCostCentersIndexRoute
   '/departments/': typeof PrivateDepartmentsIndexRoute
   '/employees/': typeof PrivateEmployeesIndexRoute
+  '/permission-groups/': typeof PrivatePermissionGroupsIndexRoute
+  '/permissions/': typeof PrivatePermissionsIndexRoute
   '/positions/': typeof PrivatePositionsIndexRoute
   '/requisitions/': typeof PrivateRequisitionsIndexRoute
   '/users/': typeof PrivateUsersIndexRoute
@@ -156,6 +171,8 @@ export interface FileRoutesByTo {
   '/cost-centers': typeof PrivateCostCentersIndexRoute
   '/departments': typeof PrivateDepartmentsIndexRoute
   '/employees': typeof PrivateEmployeesIndexRoute
+  '/permission-groups': typeof PrivatePermissionGroupsIndexRoute
+  '/permissions': typeof PrivatePermissionsIndexRoute
   '/positions': typeof PrivatePositionsIndexRoute
   '/requisitions': typeof PrivateRequisitionsIndexRoute
   '/users': typeof PrivateUsersIndexRoute
@@ -178,6 +195,8 @@ export interface FileRoutesById {
   '/_private/cost-centers/': typeof PrivateCostCentersIndexRoute
   '/_private/departments/': typeof PrivateDepartmentsIndexRoute
   '/_private/employees/': typeof PrivateEmployeesIndexRoute
+  '/_private/permission-groups/': typeof PrivatePermissionGroupsIndexRoute
+  '/_private/permissions/': typeof PrivatePermissionsIndexRoute
   '/_private/positions/': typeof PrivatePositionsIndexRoute
   '/_private/requisitions/': typeof PrivateRequisitionsIndexRoute
   '/_private/users/': typeof PrivateUsersIndexRoute
@@ -199,6 +218,8 @@ export interface FileRouteTypes {
     | '/cost-centers/'
     | '/departments/'
     | '/employees/'
+    | '/permission-groups/'
+    | '/permissions/'
     | '/positions/'
     | '/requisitions/'
     | '/users/'
@@ -218,6 +239,8 @@ export interface FileRouteTypes {
     | '/cost-centers'
     | '/departments'
     | '/employees'
+    | '/permission-groups'
+    | '/permissions'
     | '/positions'
     | '/requisitions'
     | '/users'
@@ -239,6 +262,8 @@ export interface FileRouteTypes {
     | '/_private/cost-centers/'
     | '/_private/departments/'
     | '/_private/employees/'
+    | '/_private/permission-groups/'
+    | '/_private/permissions/'
     | '/_private/positions/'
     | '/_private/requisitions/'
     | '/_private/users/'
@@ -322,6 +347,20 @@ declare module '@tanstack/react-router' {
       path: '/positions'
       fullPath: '/positions/'
       preLoaderRoute: typeof PrivatePositionsIndexRouteImport
+      parentRoute: typeof PrivateRouteRoute
+    }
+    '/_private/permissions/': {
+      id: '/_private/permissions/'
+      path: '/permissions'
+      fullPath: '/permissions/'
+      preLoaderRoute: typeof PrivatePermissionsIndexRouteImport
+      parentRoute: typeof PrivateRouteRoute
+    }
+    '/_private/permission-groups/': {
+      id: '/_private/permission-groups/'
+      path: '/permission-groups'
+      fullPath: '/permission-groups/'
+      preLoaderRoute: typeof PrivatePermissionGroupsIndexRouteImport
       parentRoute: typeof PrivateRouteRoute
     }
     '/_private/employees/': {
@@ -416,6 +455,8 @@ interface PrivateRouteRouteChildren {
   PrivateCostCentersIndexRoute: typeof PrivateCostCentersIndexRoute
   PrivateDepartmentsIndexRoute: typeof PrivateDepartmentsIndexRoute
   PrivateEmployeesIndexRoute: typeof PrivateEmployeesIndexRoute
+  PrivatePermissionGroupsIndexRoute: typeof PrivatePermissionGroupsIndexRoute
+  PrivatePermissionsIndexRoute: typeof PrivatePermissionsIndexRoute
   PrivatePositionsIndexRoute: typeof PrivatePositionsIndexRoute
   PrivateRequisitionsIndexRoute: typeof PrivateRequisitionsIndexRoute
   PrivateUsersIndexRoute: typeof PrivateUsersIndexRoute
@@ -433,6 +474,8 @@ const PrivateRouteRouteChildren: PrivateRouteRouteChildren = {
   PrivateCostCentersIndexRoute: PrivateCostCentersIndexRoute,
   PrivateDepartmentsIndexRoute: PrivateDepartmentsIndexRoute,
   PrivateEmployeesIndexRoute: PrivateEmployeesIndexRoute,
+  PrivatePermissionGroupsIndexRoute: PrivatePermissionGroupsIndexRoute,
+  PrivatePermissionsIndexRoute: PrivatePermissionsIndexRoute,
   PrivatePositionsIndexRoute: PrivatePositionsIndexRoute,
   PrivateRequisitionsIndexRoute: PrivateRequisitionsIndexRoute,
   PrivateUsersIndexRoute: PrivateUsersIndexRoute,

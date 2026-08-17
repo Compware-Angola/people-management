@@ -34,11 +34,13 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { Pagination } from '@/components/table/pagination'
+import { TableEmptyState, TableErrorState } from '@/components/table/table-state'
 import { TableGroupRowSkeleton } from '@/components/table/table-skeleton'
 import {
   usePositionsQuery,
   useRemovePositionMutation,
 } from '@/hooks/positions'
+import { formatDatePtAO } from '@/lib/date/format-date-pt-ao'
 import { cn } from '@/lib/utils'
 import type {
   Position,
@@ -47,20 +49,6 @@ import type {
 import { PositionDeleteDialog } from './components/position-delete-dialog'
 import { PositionFormModal } from './components/position-form-modal'
 import { PositionStatusBadge } from './components/position-status-badge'
-
-function formatDate(value?: string | null) {
-  if (!value) return '-'
-
-  const date = new Date(value)
-
-  if (Number.isNaN(date.getTime())) return value
-
-  return new Intl.DateTimeFormat('pt-AO', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-  }).format(date)
-}
 
 export function ListPositions() {
   const [page, setPage] = useState(1)
@@ -210,29 +198,17 @@ export function ListPositions() {
               {loading ? (
                 <TableGroupRowSkeleton rows={10} columns={5} />
               ) : isError ? (
-                <TableRow>
-                  <TableCell colSpan={5} className="h-40 text-center">
-                    <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
-                      <BriefcaseBusiness className="h-8 w-8 text-destructive" />
-                      <span className="font-medium text-destructive">
-                        Erro ao carregar cargos
-                      </span>
-                      <span className="text-sm">
-                        Não foi possível buscar os dados. Tente novamente mais
-                        tarde.
-                      </span>
-                    </div>
-                  </TableCell>
-                </TableRow>
+                <TableErrorState
+                  columns={5}
+                  icon={BriefcaseBusiness}
+                  title="Erro ao carregar cargos"
+                />
               ) : positionRecords.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={5} className="h-32 text-center">
-                    <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                      <BriefcaseBusiness className="h-8 w-8" />
-                      <span>Nenhum cargo encontrado.</span>
-                    </div>
-                  </TableCell>
-                </TableRow>
+                <TableEmptyState
+                  columns={5}
+                  icon={BriefcaseBusiness}
+                  title="Nenhum cargo encontrado."
+                />
               ) : (
                 positionRecords.map((position) => (
                   <TableRow key={position.code}>
@@ -243,7 +219,7 @@ export function ListPositions() {
                     <TableCell>
                       <PositionStatusBadge status={position.status} />
                     </TableCell>
-                    <TableCell>{formatDate(position.createdAt)}</TableCell>
+                    <TableCell>{formatDatePtAO(position.createdAt)}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
                         <Tooltip>

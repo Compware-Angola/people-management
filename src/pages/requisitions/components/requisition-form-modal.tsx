@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Loader2, Save, X } from 'lucide-react'
-import { useDepartmentsQuery } from '@/hooks/departments'
+import { useMyDepartmentsQuery } from '@/hooks/departments'
 import { useCostCentersQuery } from '@/hooks/cost-centers'
 import { useHiringTypesQuery } from '@/hooks/hiring-types'
 import { usePositionsQuery } from '@/hooks/positions'
@@ -51,7 +51,7 @@ export function RequisitionFormModal({
   const { mutateAsync: createRequisition } = useCreateRequisitionMutation()
   const { mutateAsync: updateRequisition } = useUpdateRequisitionMutation()
   const { data: departmentsData, isLoading: isLoadingDepartments } =
-    useDepartmentsQuery({ page: 1, limit: 100, status: 1 })
+    useMyDepartmentsQuery()
   const { data: costCentersData, isLoading: isLoadingCostCenters } =
     useCostCentersQuery({ page: 1, limit: 100, status: 1 })
   const { data: positionsData, isLoading: isLoadingPositions } =
@@ -60,7 +60,7 @@ export function RequisitionFormModal({
     useHiringTypesQuery({ page: 1, limit: 100, status: 1 })
 
   const departmentOptions =
-    departmentsData?.data.map((department) => ({
+    departmentsData?.departments.map((department) => ({
       label: department.description,
       value: String(department.code),
     })) ?? []

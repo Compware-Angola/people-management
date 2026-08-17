@@ -34,12 +34,14 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { Pagination } from '@/components/table/pagination'
+import { TableEmptyState, TableErrorState } from '@/components/table/table-state'
 import { TableGroupRowSkeleton } from '@/components/table/table-skeleton'
 import {
   useCostCentersQuery,
   useRemoveCostCenterMutation,
 } from '@/hooks/cost-centers'
 import { useDepartmentsQuery } from '@/hooks/departments'
+import { formatDatePtAO } from '@/lib/date/format-date-pt-ao'
 import { cn } from '@/lib/utils'
 import type {
   CostCenter,
@@ -48,20 +50,6 @@ import type {
 import { CostCenterDeleteDialog } from './components/cost-center-delete-dialog'
 import { CostCenterFormModal } from './components/cost-center-form-modal'
 import { CostCenterStatusBadge } from './components/cost-center-status-badge'
-
-function formatDate(value?: string | null) {
-  if (!value) return '-'
-
-  const date = new Date(value)
-
-  if (Number.isNaN(date.getTime())) return value
-
-  return new Intl.DateTimeFormat('pt-AO', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-  }).format(date)
-}
 
 export function ListCostCenters() {
   const [page, setPage] = useState(1)
@@ -254,29 +242,17 @@ export function ListCostCenters() {
               {loading ? (
                 <TableGroupRowSkeleton rows={10} columns={6} />
               ) : isError ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="h-40 text-center">
-                    <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
-                      <Landmark className="h-8 w-8 text-destructive" />
-                      <span className="font-medium text-destructive">
-                        Erro ao carregar centros de custo
-                      </span>
-                      <span className="text-sm">
-                        Não foi possível buscar os dados. Tente novamente mais
-                        tarde.
-                      </span>
-                    </div>
-                  </TableCell>
-                </TableRow>
+                <TableErrorState
+                  columns={6}
+                  icon={Landmark}
+                  title="Erro ao carregar centros de custo"
+                />
               ) : costCenterRecords.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="h-32 text-center">
-                    <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                      <Landmark className="h-8 w-8" />
-                      <span>Nenhum centro de custo encontrado.</span>
-                    </div>
-                  </TableCell>
-                </TableRow>
+                <TableEmptyState
+                  columns={6}
+                  icon={Landmark}
+                  title="Nenhum centro de custo encontrado."
+                />
               ) : (
                 costCenterRecords.map((costCenter) => (
                   <TableRow key={costCenter.code}>
@@ -290,7 +266,9 @@ export function ListCostCenters() {
                     <TableCell>
                       <CostCenterStatusBadge status={costCenter.status} />
                     </TableCell>
-                    <TableCell>{formatDate(costCenter.createdAt)}</TableCell>
+                    <TableCell>
+                      {formatDatePtAO(costCenter.createdAt)}
+                    </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
                         <Tooltip>

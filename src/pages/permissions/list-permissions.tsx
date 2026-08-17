@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Building2, Pencil, Plus, RefreshCcw, Trash2 } from 'lucide-react'
+import { KeyRound, Pencil, Plus, RefreshCcw, Trash2 } from 'lucide-react'
 
 import {
   Breadcrumb,
@@ -33,81 +33,84 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { Pagination } from '@/components/table/pagination'
-import { TableEmptyState, TableErrorState } from '@/components/table/table-state'
 import { TableGroupRowSkeleton } from '@/components/table/table-skeleton'
 import {
-  useDepartmentsQuery,
-  useRemoveDepartmentMutation,
-} from '@/hooks/departments'
-import { formatDatePtAO } from '@/lib/date/format-date-pt-ao'
+  usePermissionsQuery,
+  useRemovePermissionMutation,
+} from '@/hooks/permissions'
 import { cn } from '@/lib/utils'
-import type {
-  Department,
-  DepartmentStatus,
-} from '@/services/departments/departments.types'
-import { DepartmentDeleteDialog } from './components/department-delete-dialog'
-import { DepartmentFormModal } from './components/department-form-modal'
-import { DepartmentStatusBadge } from './components/department-status-badge'
+import type { Permission } from '@/services/permissions/permissions.types'
+import { PermissionDeleteDialog } from './components/permission-delete-dialog'
+import { PermissionFormModal } from './components/permission-form-modal'
+import { PermissionStatusBadge } from './components/permission-status-badge'
 
-export function ListDepartments() {
-  const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(10)
+function formatDate(value?: string | null) {
+  if (!value) return '-'
+
+  const date = new Date(value)
+
+  if (Number.isNaN(date.getTime())) return value
+
+  return new Intl.DateTimeFormat('pt-AO', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  }).format(date)
+}
+
+export function ListPermissions() {
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState('all')
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [editingDepartment, setEditingDepartment] =
-    useState<Department | null>(null)
-  const [deletingDepartment, setDeletingDepartment] =
-    useState<Department | null>(null)
+  const [editingPermission, setEditingPermission] =
+    useState<Permission | null>(null)
+  const [deletingPermission, setDeletingPermission] =
+    useState<Permission | null>(null)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const { mutateAsync: removeDepartment, isPending: isRemoving } =
-    useRemoveDepartmentMutation()
+  const { mutateAsync: removePermission, isPending: isRemoving } =
+    useRemovePermissionMutation()
 
-  const { data, isLoading, isError, refetch, isFetching } =
-    useDepartmentsQuery({
-      page,
-      limit,
-      ...(search ? { search } : {}),
-      ...(status !== 'all'
-        ? { status: Number(status) as DepartmentStatus }
-        : {}),
+  const { data = [], isLoading, isError, refetch, isFetching } =
+    usePermissionsQuery()
+
+  const filteredPermissions = useMemo(() => {
+    const normalizedSearch = search.trim().toLowerCase()
+
+    return data.filter((permission) => {
+      const matchesSearch =
+        !normalizedSearch ||
+        permission.description.toLowerCase().includes(normalizedSearch)
+
+      const matchesStatus =
+        status === 'all' || String(permission.status) === status
+
+      return matchesSearch && matchesStatus
     })
+  }, [data, search, status])
 
-  const departmentRecords = useMemo(() => data?.data ?? [], [data])
-  const meta = data?.meta
-  const total = meta?.total ?? 0
-  const totalPages = meta?.totalPages ?? 1
-  const currentPage = meta?.page ?? page
-  const rangeStart = total === 0 ? 0 : (currentPage - 1) * limit + 1
-  const rangeEnd = Math.min(currentPage * limit, total)
   const loading = isLoading || isFetching
 
-  function resetPage() {
-    setPage(1)
-  }
-
   function openCreateModal() {
-    setEditingDepartment(null)
+    setEditingPermission(null)
     setIsModalOpen(true)
   }
 
-  function openEditModal(department: Department) {
-    setEditingDepartment(department)
+  function openEditModal(permission: Permission) {
+    setEditingPermission(permission)
     setIsModalOpen(true)
   }
 
-  function openDeleteDialog(department: Department) {
-    setDeletingDepartment(department)
+  function openDeleteDialog(permission: Permission) {
+    setDeletingPermission(permission)
     setIsDeleteDialogOpen(true)
   }
 
   async function handleConfirmRemove() {
-    if (!deletingDepartment) return
+    if (!deletingPermission) return
 
-    await removeDepartment(deletingDepartment.code)
+    await removePermission(deletingPermission.id)
     setIsDeleteDialogOpen(false)
-    setDeletingDepartment(null)
+    setDeletingPermission(null)
   }
 
   return (
@@ -121,13 +124,13 @@ export function ListDepartments() {
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>Departamentos</BreadcrumbPage>
+                <BreadcrumbPage>Permissões</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-          <h1 className="text-3xl font-bold tracking-tight">Departamentos</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Permissões</h1>
           <p className="text-muted-foreground">
-            Consultar e gerir departamentos usados nos fluxos de pessoas
+            Consultar, criar e editar permissões individuais do sistema
           </p>
         </div>
 
@@ -144,7 +147,7 @@ export function ListDepartments() {
 
           <Button onClick={openCreateModal}>
             <Plus className="mr-2 h-4 w-4" />
-            Novo Departamento
+            Nova Permissão
           </Button>
         </div>
       </div>
@@ -152,33 +155,24 @@ export function ListDepartments() {
       <Card className="p-4">
         <div className="grid gap-3 md:grid-cols-3">
           <div className="space-y-2">
-            <Label>Descrição do departamento</Label>
+            <Label>Descrição da permissão</Label>
             <Input
               value={search}
-              onChange={(event) => {
-                setSearch(event.target.value)
-                resetPage()
-              }}
+              onChange={(event) => setSearch(event.target.value)}
               placeholder="Pesquisar por descrição"
             />
           </div>
 
           <div className="space-y-2">
             <Label>Estado</Label>
-            <Select
-              value={status}
-              onValueChange={(value) => {
-                setStatus(value)
-                resetPage()
-              }}
-            >
+            <Select value={status} onValueChange={setStatus}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Estado" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos os estados</SelectItem>
-                <SelectItem value="1">Ativo</SelectItem>
-                <SelectItem value="0">Inativo</SelectItem>
+                <SelectItem value="1">Ativa</SelectItem>
+                <SelectItem value="0">Inativa</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -193,7 +187,7 @@ export function ListDepartments() {
                 <TableHead>Código</TableHead>
                 <TableHead>Descrição</TableHead>
                 <TableHead>Estado</TableHead>
-                <TableHead>Criado em</TableHead>
+                <TableHead>Criada em</TableHead>
                 <TableHead className="text-right">Ações</TableHead>
               </TableRow>
             </TableHeader>
@@ -202,30 +196,40 @@ export function ListDepartments() {
               {loading ? (
                 <TableGroupRowSkeleton rows={10} columns={5} />
               ) : isError ? (
-                <TableErrorState
-                  columns={5}
-                  icon={Building2}
-                  title="Erro ao carregar departamentos"
-                />
-              ) : departmentRecords.length === 0 ? (
-                <TableEmptyState
-                  columns={5}
-                  icon={Building2}
-                  title="Nenhum departamento encontrado."
-                />
+                <TableRow>
+                  <TableCell colSpan={5} className="h-40 text-center">
+                    <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
+                      <KeyRound className="h-8 w-8 text-destructive" />
+                      <span className="font-medium text-destructive">
+                        Erro ao carregar permissões
+                      </span>
+                      <span className="text-sm">
+                        Não foi possível buscar os dados. Tente novamente mais
+                        tarde.
+                      </span>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : filteredPermissions.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="h-32 text-center">
+                    <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                      <KeyRound className="h-8 w-8" />
+                      <span>Nenhuma permissão encontrada.</span>
+                    </div>
+                  </TableCell>
+                </TableRow>
               ) : (
-                departmentRecords.map((department) => (
-                  <TableRow key={department.code}>
-                    <TableCell>{department.code}</TableCell>
+                filteredPermissions.map((permission) => (
+                  <TableRow key={permission.id}>
+                    <TableCell>{permission.id}</TableCell>
                     <TableCell className="font-medium">
-                      {department.description}
+                      {permission.description}
                     </TableCell>
                     <TableCell>
-                      <DepartmentStatusBadge status={department.status} />
+                      <PermissionStatusBadge status={permission.status} />
                     </TableCell>
-                    <TableCell>
-                      {formatDatePtAO(department.createdAt)}
-                    </TableCell>
+                    <TableCell>{formatDate(permission.createdAt)}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
                         <Tooltip>
@@ -233,12 +237,12 @@ export function ListDepartments() {
                             <Button
                               variant="ghost"
                               size="icon"
-                              onClick={() => openEditModal(department)}
+                              onClick={() => openEditModal(permission)}
                             >
                               <Pencil className="h-4 w-4" />
                             </Button>
                           </TooltipTrigger>
-                          <TooltipContent>Editar departamento</TooltipContent>
+                          <TooltipContent>Editar permissão</TooltipContent>
                         </Tooltip>
 
                         <Tooltip>
@@ -247,12 +251,12 @@ export function ListDepartments() {
                               variant="ghost"
                               size="icon"
                               disabled={isRemoving}
-                              onClick={() => openDeleteDialog(department)}
+                              onClick={() => openDeleteDialog(permission)}
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           </TooltipTrigger>
-                          <TooltipContent>Remover departamento</TooltipContent>
+                          <TooltipContent>Remover permissão</TooltipContent>
                         </Tooltip>
                       </div>
                     </TableCell>
@@ -262,32 +266,18 @@ export function ListDepartments() {
             </TableBody>
           </Table>
         </div>
-
-        <Pagination
-          page={currentPage}
-          totalPages={totalPages}
-          total={total}
-          rangeStart={rangeStart}
-          rangeEnd={rangeEnd}
-          limit={limit}
-          onPageChange={setPage}
-          onLimitChange={(value) => {
-            setLimit(value)
-            setPage(1)
-          }}
-        />
       </Card>
 
-      <DepartmentFormModal
+      <PermissionFormModal
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
-        department={editingDepartment}
+        permission={editingPermission}
       />
 
-      <DepartmentDeleteDialog
+      <PermissionDeleteDialog
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
-        department={deletingDepartment}
+        permission={deletingPermission}
         loading={isRemoving}
         onConfirm={handleConfirmRemove}
       />

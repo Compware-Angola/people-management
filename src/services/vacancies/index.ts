@@ -1,4 +1,6 @@
 import { gpApi } from '@/lib/api/gp.api'
+import { buildSearchParams } from '@/lib/api/build-search-params'
+import { parseOptionalJson } from '@/lib/api/parse-optional-json'
 import type {
   CreateVacancyDTO,
   UpdateVacancyDTO,
@@ -8,65 +10,6 @@ import type {
   Vacancy,
   VacancyActionDTO,
 } from './vacancies.types'
-
-async function parseOptionalJson<T>(response: Response): Promise<T | void> {
-  if (response.status === 204) {
-    return
-  }
-
-  const body = await response.text()
-
-  if (!body) {
-    return
-  }
-
-  return JSON.parse(body) as T
-}
-
-function buildSearchParams(params?: VacanciesListParams) {
-  const searchParams = new URLSearchParams()
-
-  searchParams.set('page', String(params?.page ?? 1))
-  searchParams.set('limit', String(params?.limit ?? 10))
-
-  if (params?.search) {
-    searchParams.set('search', params.search)
-  }
-
-  if (params?.positionId) {
-    searchParams.set('positionId', String(params.positionId))
-  }
-
-  if (params?.departmentId) {
-    searchParams.set('departmentId', String(params.departmentId))
-  }
-
-  if (params?.hiringTypeId) {
-    searchParams.set('hiringTypeId', String(params.hiringTypeId))
-  }
-
-  if (params?.stateId) {
-    searchParams.set('stateId', String(params.stateId))
-  }
-
-  if (params?.publicationStart) {
-    searchParams.set('publicationStart', params.publicationStart)
-  }
-
-  if (params?.publicationEnd) {
-    searchParams.set('publicationEnd', params.publicationEnd)
-  }
-
-  if (params?.closingStart) {
-    searchParams.set('closingStart', params.closingStart)
-  }
-
-  if (params?.closingEnd) {
-    searchParams.set('closingEnd', params.closingEnd)
-  }
-
-  return searchParams
-}
 
 async function create(payload: CreateVacancyDTO): Promise<Vacancy | void> {
   const response = await gpApi.post('vacancies', { json: payload })
@@ -79,7 +22,19 @@ async function findAll(
 ): Promise<VacanciesListResponse> {
   return gpApi
     .get('vacancies', {
-      searchParams: buildSearchParams(params),
+      searchParams: buildSearchParams({
+        page: params?.page ?? 1,
+        limit: params?.limit ?? 10,
+        search: params?.search,
+        positionId: params?.positionId,
+        departmentId: params?.departmentId,
+        hiringTypeId: params?.hiringTypeId,
+        stateId: params?.stateId,
+        publicationStart: params?.publicationStart,
+        publicationEnd: params?.publicationEnd,
+        closingStart: params?.closingStart,
+        closingEnd: params?.closingEnd,
+      }),
     })
     .json<VacanciesListResponse>()
 }

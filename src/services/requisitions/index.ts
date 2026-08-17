@@ -1,4 +1,6 @@
 import { gpApi } from '@/lib/api/gp.api'
+import { buildSearchParams } from '@/lib/api/build-search-params'
+import { parseOptionalJson } from '@/lib/api/parse-optional-json'
 import type {
   AnalyzeRequisitionFinancialDTO,
   AnalyzeRequisitionRhDTO,
@@ -9,69 +11,6 @@ import type {
   RequisitionsListResponse,
   UpdateRequisitionDTO,
 } from './requisitions.types'
-
-async function parseOptionalJson<T>(response: Response): Promise<T | void> {
-  if (response.status === 204) {
-    return
-  }
-
-  const body = await response.text()
-
-  if (!body) {
-    return
-  }
-
-  return JSON.parse(body) as T
-}
-
-function buildSearchParams(params?: RequisitionsListParams) {
-  const searchParams = new URLSearchParams()
-
-  searchParams.set('page', String(params?.page ?? 1))
-  searchParams.set('limit', String(params?.limit ?? 10))
-
-  if (params?.search) {
-    searchParams.set('search', params.search)
-  }
-
-  if (params?.requesterName) {
-    searchParams.set('requesterName', params.requesterName)
-  }
-
-  if (params?.requesterId) {
-    searchParams.set('requesterId', String(params.requesterId))
-  }
-
-  if (params?.departmentId) {
-    searchParams.set('departmentId', String(params.departmentId))
-  }
-
-  if (params?.costCenterId) {
-    searchParams.set('costCenterId', String(params.costCenterId))
-  }
-
-  if (params?.positionId) {
-    searchParams.set('positionId', String(params.positionId))
-  }
-
-  if (params?.hiringTypeId) {
-    searchParams.set('hiringTypeId', String(params.hiringTypeId))
-  }
-
-  if (params?.stateId) {
-    searchParams.set('stateId', String(params.stateId))
-  }
-
-  if (params?.startDate) {
-    searchParams.set('startDate', params.startDate)
-  }
-
-  if (params?.endDate) {
-    searchParams.set('endDate', params.endDate)
-  }
-
-  return searchParams
-}
 
 async function create(
   payload: CreateRequisitionDTO,
@@ -86,7 +25,20 @@ async function findAll(
 ): Promise<RequisitionsListResponse> {
   return gpApi
     .get('requisitions', {
-      searchParams: buildSearchParams(params),
+      searchParams: buildSearchParams({
+        page: params?.page ?? 1,
+        limit: params?.limit ?? 10,
+        search: params?.search,
+        requesterName: params?.requesterName,
+        requesterId: params?.requesterId,
+        departmentId: params?.departmentId,
+        costCenterId: params?.costCenterId,
+        positionId: params?.positionId,
+        hiringTypeId: params?.hiringTypeId,
+        stateId: params?.stateId,
+        startDate: params?.startDate,
+        endDate: params?.endDate,
+      }),
     })
     .json<RequisitionsListResponse>()
 }

@@ -1,4 +1,6 @@
 import { gpApi } from '@/lib/api/gp.api'
+import { buildSearchParams } from '@/lib/api/build-search-params'
+import { parseOptionalJson } from '@/lib/api/parse-optional-json'
 import type {
   CreateVacationDTO,
   UpdateVacationDTO,
@@ -6,53 +8,6 @@ import type {
   VacationListParams,
   VacationListResponse,
 } from './vacations.types'
-
-async function parseOptionalJson<T>(response: Response): Promise<T | void> {
-  if (response.status === 204) {
-    return
-  }
-
-  const body = await response.text()
-
-  if (!body) {
-    return
-  }
-
-  return JSON.parse(body) as T
-}
-
-function buildSearchParams(params?: VacationListParams) {
-  const searchParams = new URLSearchParams()
-
-  searchParams.set('page', String(params?.page ?? 1))
-  searchParams.set('limit', String(params?.limit ?? 10))
-
-  if (params?.employeeId) {
-    searchParams.set('employeeId', String(params.employeeId))
-  }
-
-  if (params?.status) {
-    searchParams.set('status', params.status)
-  }
-
-  if (params?.approverManagerId) {
-    searchParams.set('approverManagerId', String(params.approverManagerId))
-  }
-
-  if (params?.approverRhId) {
-    searchParams.set('approverRhId', String(params.approverRhId))
-  }
-
-  if (params?.startDate) {
-    searchParams.set('startDate', params.startDate)
-  }
-
-  if (params?.endDate) {
-    searchParams.set('endDate', params.endDate)
-  }
-
-  return searchParams
-}
 
 async function create(payload: CreateVacationDTO): Promise<Vacation | void> {
   const response = await gpApi.post('vacations', { json: payload })
@@ -65,7 +20,16 @@ async function findAll(
 ): Promise<VacationListResponse> {
   return gpApi
     .get('vacations', {
-      searchParams: buildSearchParams(params),
+      searchParams: buildSearchParams({
+        page: params?.page ?? 1,
+        limit: params?.limit ?? 10,
+        employeeId: params?.employeeId,
+        status: params?.status,
+        approverManagerId: params?.approverManagerId,
+        approverRhId: params?.approverRhId,
+        startDate: params?.startDate,
+        endDate: params?.endDate,
+      }),
     })
     .json<VacationListResponse>()
 }

@@ -1,42 +1,14 @@
 import { gpApi } from '@/lib/api/gp.api'
+import { buildSearchParams } from '@/lib/api/build-search-params'
+import { parseOptionalJson } from '@/lib/api/parse-optional-json'
 import type {
   CreateDepartmentDTO,
   Department,
   DepartmentsListParams,
   DepartmentsListResponse,
+  MyDepartmentsResponse,
   UpdateDepartmentDTO,
 } from './departments.types'
-
-async function parseOptionalJson<T>(response: Response): Promise<T | void> {
-  if (response.status === 204) {
-    return
-  }
-
-  const body = await response.text()
-
-  if (!body) {
-    return
-  }
-
-  return JSON.parse(body) as T
-}
-
-function buildSearchParams(params?: DepartmentsListParams) {
-  const searchParams = new URLSearchParams()
-
-  searchParams.set('page', String(params?.page ?? 1))
-  searchParams.set('limit', String(params?.limit ?? 10))
-
-  if (params?.search) {
-    searchParams.set('search', params.search)
-  }
-
-  if (params?.status !== undefined) {
-    searchParams.set('status', String(params.status))
-  }
-
-  return searchParams
-}
 
 async function create(
   payload: CreateDepartmentDTO,
@@ -51,13 +23,22 @@ async function findAll(
 ): Promise<DepartmentsListResponse> {
   return gpApi
     .get('departments', {
-      searchParams: buildSearchParams(params),
+      searchParams: buildSearchParams({
+        page: params?.page ?? 1,
+        limit: params?.limit ?? 10,
+        search: params?.search,
+        status: params?.status,
+      }),
     })
     .json<DepartmentsListResponse>()
 }
 
 async function findOne(code: number): Promise<Department> {
   return gpApi.get(`departments/${code}`).json<Department>()
+}
+
+async function findMyDepartments(): Promise<MyDepartmentsResponse> {
+  return gpApi.get('departments/my').json<MyDepartmentsResponse>()
 }
 
 async function update(
@@ -77,6 +58,7 @@ export const departmentsService = {
   create,
   findAll,
   findOne,
+  findMyDepartments,
   update,
   remove,
 }

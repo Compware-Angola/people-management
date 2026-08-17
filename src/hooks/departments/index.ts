@@ -28,6 +28,14 @@ export function useDepartmentDetailsQuery(code?: number) {
   })
 }
 
+export function useMyDepartmentsQuery() {
+  return useQuery({
+    queryKey: [QUERY_KEY.departments, 'my'],
+    queryFn: () => departmentsService.findMyDepartments(),
+    staleTime: 1000 * 60 * 5,
+  })
+}
+
 export function useCreateDepartmentMutation() {
   return useMutation({
     mutationFn: (data: CreateDepartmentDTO) => departmentsService.create(data),
