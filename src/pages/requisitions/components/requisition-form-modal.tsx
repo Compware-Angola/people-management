@@ -20,10 +20,8 @@ import type {
   CreateRequisitionDTO,
   Requisition,
 } from '@/services/requisitions/requisitions.types'
-import {
-  useRequisitionFormModal,
-  type RequisitionFormValues,
-} from '../hooks/use-requisition-form-modal'
+import { useRequisitionFormModal } from '../hooks/use-requisition-form-modal'
+import type { RequisitionFormValues } from '../hooks/use-requisition-form-modal'
 
 type Props = {
   open: boolean
@@ -48,43 +46,6 @@ export function RequisitionFormModal({
   requisition,
 }: Props) {
   const isEdit = Boolean(requisition)
-  const { mutateAsync: createRequisition } = useCreateRequisitionMutation()
-  const { mutateAsync: updateRequisition } = useUpdateRequisitionMutation()
-  const { data: departmentsData, isLoading: isLoadingDepartments } =
-    useMyDepartmentsQuery()
-  const { data: costCentersData, isLoading: isLoadingCostCenters } =
-    useCostCentersQuery({ page: 1, limit: 100, status: 1 })
-  const { data: positionsData, isLoading: isLoadingPositions } =
-    usePositionsQuery({ page: 1, limit: 100, status: 1 })
-  const { data: hiringTypesData, isLoading: isLoadingHiringTypes } =
-    useHiringTypesQuery({ page: 1, limit: 100, status: 1 })
-
-  const departmentOptions =
-    departmentsData?.departments.map((department) => ({
-      label: department.description,
-      value: String(department.code),
-    })) ?? []
-
-  const costCenterOptions =
-    costCentersData?.data.map((costCenter) => ({
-      label: costCenter.department?.description
-        ? `${costCenter.description} - ${costCenter.department.description}`
-        : costCenter.description,
-      value: String(costCenter.code),
-    })) ?? []
-
-  const positionOptions =
-    positionsData?.data.map((position) => ({
-      label: position.description,
-      value: String(position.code),
-    })) ?? []
-
-  const hiringTypeOptions =
-    hiringTypesData?.data.map((hiringType) => ({
-      label: `${hiringType.acronym} - ${hiringType.description}`,
-      value: String(hiringType.code),
-    })) ?? []
-
   const { form, canSubmit, isLoading } = useRequisitionFormModal({
     open,
     requisition,
@@ -109,11 +70,38 @@ export function RequisitionFormModal({
     },
   })
 
+  const { mutateAsync: createRequisition } = useCreateRequisitionMutation()
+  const { mutateAsync: updateRequisition } = useUpdateRequisitionMutation()
+
+  const { data: departmentsData, isLoading: isLoadingDepartments } =
+    useMyDepartmentsQuery()
+  const { data: positionsData, isLoading: isLoadingPositions } =
+    usePositionsQuery({ page: 1, limit: 100, status: 1 })
+  const { data: hiringTypesData, isLoading: isLoadingHiringTypes } =
+    useHiringTypesQuery({ page: 1, limit: 100, status: 1 })
+
+  const departmentOptions =
+    departmentsData?.departments.map((department) => ({
+      label: department.description,
+      value: String(department.code),
+    })) ?? []
+
+  const positionOptions =
+    positionsData?.data.map((position) => ({
+      label: position.description,
+      value: String(position.code),
+    })) ?? []
+
+  const hiringTypeOptions =
+    hiringTypesData?.data.map((hiringType) => ({
+      label: `${hiringType.acronym} - ${hiringType.description}`,
+      value: String(hiringType.code),
+    })) ?? []
+
   function handleOpenChange(nextOpen: boolean) {
     if (!nextOpen) {
       form.reset()
     }
-
     onOpenChange(nextOpen)
   }
 
@@ -139,7 +127,14 @@ export function RequisitionFormModal({
           }}
         >
           <div className="grid gap-4 md:grid-cols-2">
-            <form.AppField name="departmentId">
+            <form.AppField
+              name="departmentId"
+              listeners={{
+                onChange: () => {
+                  form.setFieldValue('costCenterId', '')
+                },
+              }}
+            >
               {(field) => (
                 <field.ComboboxField
                   label="Departamento"
@@ -153,21 +148,16 @@ export function RequisitionFormModal({
                 />
               )}
             </form.AppField>
-
-            <form.AppField name="costCenterId">
-              {(field) => (
-                <field.ComboboxField
-                  label="Centro de custo"
-                  placeholder={
-                    isLoadingCostCenters
-                      ? 'Carregando centros de custo...'
-                      : 'Selecionar centro de custo'
-                  }
-                  emptyMessage="Nenhum centro de custo encontrado."
-                  options={costCenterOptions}
+            <form.Subscribe
+              selector={(state) => state.values.departmentId}
+            >
+              {(departmentId) => (
+                <CostCenterField
+                  departmentId={departmentId}
+                  form={form}
                 />
               )}
-            </form.AppField>
+            </form.Subscribe>
 
             <form.AppField name="positionId">
               {(field) => (
@@ -240,5 +230,50 @@ export function RequisitionFormModal({
         </form>
       </DialogContent>
     </Dialog>
+  )
+}
+
+
+function CostCenterField({
+  departmentId,
+  form,
+}: {
+  departmentId: string | undefined
+  form: ReturnType<typeof useRequisitionFormModal>['form']
+}) {
+  const { data: costCentersData, isLoading: isLoadingCostCenters } =
+    useCostCentersQuery({
+      page: 1,
+      limit: 100,
+      status: 1,
+      departmentId: departmentId ? Number(departmentId) : undefined,
+    })
+
+  const costCenterOptions =
+    costCentersData?.data.map((costCenter) => ({
+      label: costCenter.department?.description
+        ? `${costCenter.description} - ${costCenter.department.description}`
+        : costCenter.description,
+      value: String(costCenter.code),
+    })) ?? []
+
+  return (
+    <form.AppField name="costCenterId">
+      {(field) => (
+        <field.ComboboxField
+          disabled={!departmentId}
+          label="Centro de custo"
+          placeholder={
+            !departmentId
+              ? 'Selecione um departamento primeiro'
+              : isLoadingCostCenters
+                ? 'Carregando centros de custo...'
+                : 'Selecionar centro de custo'
+          }
+          emptyMessage="Nenhum centro de custo encontrado."
+          options={costCenterOptions}
+        />
+      )}
+    </form.AppField>
   )
 }

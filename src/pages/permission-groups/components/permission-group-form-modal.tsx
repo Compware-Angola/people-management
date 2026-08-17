@@ -19,9 +19,10 @@ import type {
   PermissionGroup,
 } from '@/services/permissions/permissions.types'
 import {
-  usePermissionGroupFormModal,
-  type PermissionGroupFormValues,
+  usePermissionGroupFormModal
+  
 } from '../hooks/use-permission-group-form-modal'
+import type {PermissionGroupFormValues} from '../hooks/use-permission-group-form-modal';
 
 type Props = {
   open: boolean
