@@ -9,6 +9,8 @@ export const QUERY_KEY = {
   positions: 'positions',
   requisitions: 'requisitions',
   requisitionStates: 'requisition-states',
+  salaries: 'salaries',
+  salaryProcessing: 'salary-processing',
   users: 'users',
   vacations: 'vacations',
   vacancies: 'vacancies',

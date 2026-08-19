@@ -19,6 +19,7 @@ import {
   PERMISSIONS_NAV,
   POSITIONS_NAV,
   REQUISITIONS_NAV,
+  SALARIES_NAV,
   USERS_NAV,
   VACATIONS_NAV,
   VACANCIES_NAV,
@@ -42,6 +43,7 @@ export function DashboardLayout({
           <NavMain items={PERMISSION_GROUPS_NAV} />
           <NavMain items={REQUISITIONS_NAV} />
           <NavMain items={VACANCIES_NAV} />
+          <NavMain items={SALARIES_NAV} />
           <NavMain items={ATTENDANCE_NAV} />
           <NavMain items={VACATIONS_NAV} />
           <NavMain items={BIOMETRICS_NAV} groupLabel="Biometria" />
