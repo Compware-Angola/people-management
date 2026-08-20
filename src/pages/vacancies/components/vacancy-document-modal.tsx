@@ -17,7 +17,10 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Loader2, Paperclip, X } from 'lucide-react'
+import { toast } from 'sonner'
 import { useUploadVacancyDocumentMutation } from '@/hooks/vacancies'
+import { useDeleteFile, useUploadSingle } from '@/hooks/upload/use-upload-single'
+import { getApiErrorMessage } from '@/lib/api/get-api-error-message'
 import type {
   Vacancy,
   VacancyDocumentType,
@@ -33,8 +36,12 @@ export function VacancyDocumentModal({ open, onOpenChange, vacancy }: Props) {
   const [type, setType] = useState<VacancyDocumentType>('EDITAL')
   const [description, setDescription] = useState('')
   const [file, setFile] = useState<File | null>(null)
-  const { mutateAsync: uploadDocument, isPending } =
+  const { mutateAsync: uploadDocument, isPending: isRegistering } =
     useUploadVacancyDocumentMutation()
+  const { mutateAsync: uploadSingle, isPending: isUploading } =
+    useUploadSingle()
+  const { mutateAsync: deleteFile } = useDeleteFile()
+  const isPending = isUploading || isRegistering
 
   useEffect(() => {
     if (!open) return
@@ -49,14 +56,32 @@ export function VacancyDocumentModal({ open, onOpenChange, vacancy }: Props) {
 
     if (!vacancy || !file) return
 
-    await uploadDocument({
-      code: vacancy.vacancyCode,
-      data: {
+    let key: string
+    try {
+      const uploaded = await uploadSingle({
         file,
-        type,
-        ...(description ? { description } : {}),
-      },
-    })
+        options: { folder: 'vacancies' },
+      })
+      key = uploaded.key
+    } catch (error) {
+      toast.error(await getApiErrorMessage(error))
+      return
+    }
+
+    try {
+      await uploadDocument({
+        code: vacancy.vacancyCode,
+        data: {
+          key,
+          originalName: file.name,
+          type,
+          ...(description ? { description } : {}),
+        },
+      })
+    } catch {
+      await deleteFile(key).catch(() => {})
+      return
+    }
 
     onOpenChange(false)
   }
