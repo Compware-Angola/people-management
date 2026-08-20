@@ -24,6 +24,7 @@ import { Route as PrivatePermissionGroupsIndexRouteImport } from './routes/_priv
 import { Route as PrivateEmployeesIndexRouteImport } from './routes/_private/employees/index'
 import { Route as PrivateDepartmentsIndexRouteImport } from './routes/_private/departments/index'
 import { Route as PrivateCostCentersIndexRouteImport } from './routes/_private/cost-centers/index'
+import { Route as PrivateContractsIndexRouteImport } from './routes/_private/contracts/index'
 import { Route as PrivateAttendanceIndexRouteImport } from './routes/_private/attendance/index'
 import { Route as PrivateAdminsIndexRouteImport } from './routes/_private/admins/index'
 import { Route as PrivateAboutIndexRouteImport } from './routes/_private/about/index'
@@ -106,6 +107,11 @@ const PrivateCostCentersIndexRoute = PrivateCostCentersIndexRouteImport.update({
   path: '/cost-centers/',
   getParentRoute: () => PrivateRouteRoute,
 } as any)
+const PrivateContractsIndexRoute = PrivateContractsIndexRouteImport.update({
+  id: '/contracts/',
+  path: '/contracts/',
+  getParentRoute: () => PrivateRouteRoute,
+} as any)
 const PrivateAttendanceIndexRoute = PrivateAttendanceIndexRouteImport.update({
   id: '/attendance/',
   path: '/attendance/',
@@ -147,6 +153,7 @@ export interface FileRoutesByFullPath {
   '/about/': typeof PrivateAboutIndexRoute
   '/admins/': typeof PrivateAdminsIndexRoute
   '/attendance/': typeof PrivateAttendanceIndexRoute
+  '/contracts/': typeof PrivateContractsIndexRoute
   '/cost-centers/': typeof PrivateCostCentersIndexRoute
   '/departments/': typeof PrivateDepartmentsIndexRoute
   '/employees/': typeof PrivateEmployeesIndexRoute
@@ -168,6 +175,7 @@ export interface FileRoutesByTo {
   '/about': typeof PrivateAboutIndexRoute
   '/admins': typeof PrivateAdminsIndexRoute
   '/attendance': typeof PrivateAttendanceIndexRoute
+  '/contracts': typeof PrivateContractsIndexRoute
   '/cost-centers': typeof PrivateCostCentersIndexRoute
   '/departments': typeof PrivateDepartmentsIndexRoute
   '/employees': typeof PrivateEmployeesIndexRoute
@@ -192,6 +200,7 @@ export interface FileRoutesById {
   '/_private/about/': typeof PrivateAboutIndexRoute
   '/_private/admins/': typeof PrivateAdminsIndexRoute
   '/_private/attendance/': typeof PrivateAttendanceIndexRoute
+  '/_private/contracts/': typeof PrivateContractsIndexRoute
   '/_private/cost-centers/': typeof PrivateCostCentersIndexRoute
   '/_private/departments/': typeof PrivateDepartmentsIndexRoute
   '/_private/employees/': typeof PrivateEmployeesIndexRoute
@@ -215,6 +224,7 @@ export interface FileRouteTypes {
     | '/about/'
     | '/admins/'
     | '/attendance/'
+    | '/contracts/'
     | '/cost-centers/'
     | '/departments/'
     | '/employees/'
@@ -236,6 +246,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admins'
     | '/attendance'
+    | '/contracts'
     | '/cost-centers'
     | '/departments'
     | '/employees'
@@ -259,6 +270,7 @@ export interface FileRouteTypes {
     | '/_private/about/'
     | '/_private/admins/'
     | '/_private/attendance/'
+    | '/_private/contracts/'
     | '/_private/cost-centers/'
     | '/_private/departments/'
     | '/_private/employees/'
@@ -384,6 +396,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateCostCentersIndexRouteImport
       parentRoute: typeof PrivateRouteRoute
     }
+    '/_private/contracts/': {
+      id: '/_private/contracts/'
+      path: '/contracts'
+      fullPath: '/contracts/'
+      preLoaderRoute: typeof PrivateContractsIndexRouteImport
+      parentRoute: typeof PrivateRouteRoute
+    }
     '/_private/attendance/': {
       id: '/_private/attendance/'
       path: '/attendance'
@@ -452,6 +471,7 @@ interface PrivateRouteRouteChildren {
   PrivateAboutIndexRoute: typeof PrivateAboutIndexRoute
   PrivateAdminsIndexRoute: typeof PrivateAdminsIndexRoute
   PrivateAttendanceIndexRoute: typeof PrivateAttendanceIndexRoute
+  PrivateContractsIndexRoute: typeof PrivateContractsIndexRoute
   PrivateCostCentersIndexRoute: typeof PrivateCostCentersIndexRoute
   PrivateDepartmentsIndexRoute: typeof PrivateDepartmentsIndexRoute
   PrivateEmployeesIndexRoute: typeof PrivateEmployeesIndexRoute
@@ -471,6 +491,7 @@ const PrivateRouteRouteChildren: PrivateRouteRouteChildren = {
   PrivateAboutIndexRoute: PrivateAboutIndexRoute,
   PrivateAdminsIndexRoute: PrivateAdminsIndexRoute,
   PrivateAttendanceIndexRoute: PrivateAttendanceIndexRoute,
+  PrivateContractsIndexRoute: PrivateContractsIndexRoute,
   PrivateCostCentersIndexRoute: PrivateCostCentersIndexRoute,
   PrivateDepartmentsIndexRoute: PrivateDepartmentsIndexRoute,
   PrivateEmployeesIndexRoute: PrivateEmployeesIndexRoute,

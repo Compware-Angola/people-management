@@ -1,6 +1,7 @@
 export const QUERY_KEY = {
   attendance: 'attendance',
   biometrics: 'biometrics',
+  contracts: 'contracts',
   costCenters: 'cost-centers',
   departments: 'departments',
   employees: 'employees',

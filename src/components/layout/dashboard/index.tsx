@@ -11,6 +11,7 @@ import { DashboardSidebarHeader } from './sidebar-header'
 import {
   ATTENDANCE_NAV,
   BIOMETRICS_NAV,
+  CONTRACTS_NAV,
   COST_CENTERS_NAV,
   DASHBOARD_NAV,
   DEPARTMENTS_NAV,
@@ -42,6 +43,7 @@ export function DashboardLayout({
           <NavMain items={PERMISSION_GROUPS_NAV} />
           <NavMain items={REQUISITIONS_NAV} />
           <NavMain items={VACANCIES_NAV} />
+          <NavMain items={CONTRACTS_NAV} />
           <NavMain items={ATTENDANCE_NAV} />
           <NavMain items={VACATIONS_NAV} />
           <NavMain items={BIOMETRICS_NAV} groupLabel="Biometria" />

@@ -1,5 +1,6 @@
 export * from './attendance'
 export * from './biometrics'
+export * from './contracts'
 export * from './cost-centers'
 export * from './dashboard'
 export * from './departments'
