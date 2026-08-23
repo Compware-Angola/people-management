@@ -28,3 +28,11 @@ export type HiringTypesListParams = {
   acronym?: string
   status?: HiringTypeStatus
 }
+
+export type CreateHiringTypeDTO = {
+  acronym: string
+  description: string
+  status?: HiringTypeStatus
+}
+
+export type UpdateHiringTypeDTO = Partial<CreateHiringTypeDTO>
