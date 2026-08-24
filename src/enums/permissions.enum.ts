@@ -21,4 +21,5 @@ export enum PermissionsEnum {
 
   READ_PERMISSIONS = 'read.permissions',
   UPDATE_PERMISSIONS = 'update.permissions',
+  FULL_ACCESS = 'full_access'
 }
