@@ -119,7 +119,8 @@ export type VacancyActionDTO = {
 }
 
 export type UploadVacancyDocumentDTO = {
-  file: File
+  key: string
+  originalName: string
   type: VacancyDocumentType
   description?: string
 }

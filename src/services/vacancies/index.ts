@@ -56,16 +56,8 @@ async function uploadDocument(
   code: string,
   payload: UploadVacancyDocumentDTO,
 ): Promise<Vacancy | void> {
-  const formData = new FormData()
-  formData.append('file', payload.file)
-  formData.append('type', payload.type)
-
-  if (payload.description) {
-    formData.append('description', payload.description)
-  }
-
   const response = await gpApi.post(`vacancies/${code}/documents`, {
-    body: formData,
+    json: payload,
   })
 
   return parseOptionalJson<Vacancy>(response)
