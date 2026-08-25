@@ -18,6 +18,11 @@ import { Pagination } from '@/components/table/pagination'
 import { useUsersQuery } from '@/hooks/users'
 import { cn } from '@/lib/utils'
 import type { User } from '@/services/users/users.types'
+import { UserDirectPermissionsModal } from './components/user-direct-permissions-modal'
+import { UserGroupsModal } from './components/user-groups-modal'
+import { hasAllPermissions } from '@/utils/permissions.util'
+import { useMyPermissionQuery } from '@/hooks/permissions'
+import { PermissionsEnum } from '@/enums/permissions.enum'
 
 export function ListUsers() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -25,6 +30,10 @@ export function ListUsers() {
   const [limit, setLimit] = useState(10)
   const [isUserModalOpen, setIsUserModalOpen] = useState(false)
   const [isEmployeeBankModalOpen, setIsEmployeeBankModalOpen] = useState(false)
+  const [isUserGroupsModalOpen, setIsUserGroupsModalOpen] = useState(false)
+  const [isDirectPermissionsModalOpen, setIsDirectPermissionsModalOpen] =
+    useState(false)
+  const {data:myPermissions } = useMyPermissionQuery()
   const [editingUser, setEditingUser] = useState<User | null>(null)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const { data, isLoading, isError, refetch, isFetching } = useUsersQuery({
@@ -32,7 +41,7 @@ export function ListUsers() {
     limit,
     name: searchTerm || undefined,
   })
-
+ const permissions =  myPermissions?.permissions ?? []
   const users = data?.data ?? []
   const meta = data?.meta
 
@@ -50,6 +59,19 @@ export function ListUsers() {
     setSelectedUser(user)
     setIsEmployeeBankModalOpen(true)
   }
+
+  const openUserGroupsModal = (user: User) => {
+    setSelectedUser(user)
+    setIsUserGroupsModalOpen(true)
+  }
+
+  const openDirectPermissionsModal = (user: User) => {
+    setSelectedUser(user)
+    setIsDirectPermissionsModalOpen(true)
+  }
+  
+
+  const canCreate = hasAllPermissions(permissions, [PermissionsEnum.CREATE_DEPARTMENT])
 
   const total = meta?.total ?? 0
   const totalPages = meta?.totalPages ?? 1
@@ -79,10 +101,13 @@ export function ListUsers() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button onClick={openCreateModal}>
+          {
+            canCreate && (<Button onClick={openCreateModal}>
             <Plus className="mr-2 h-4 w-4" />
             Novo Utilizador
-          </Button>
+          </Button>)
+          }
+         
           <Button variant="outline" onClick={() => refetch()}>
             <RefreshCcw
               className={cn(
@@ -109,6 +134,8 @@ export function ListUsers() {
           isError={isError}
           onEdit={openEditModal}
           onRegisterEmployee={openCreateEmployeeModal}
+          onManageGroups={openUserGroupsModal}
+          onManageDirectPermissions={openDirectPermissionsModal}
         />
 
         <Pagination
@@ -134,6 +161,16 @@ export function ListUsers() {
       <EmployeeBankModal
         open={isEmployeeBankModalOpen}
         onOpenChange={setIsEmployeeBankModalOpen}
+        user={selectedUser}
+      />
+      <UserGroupsModal
+        open={isUserGroupsModalOpen}
+        onOpenChange={setIsUserGroupsModalOpen}
+        user={selectedUser}
+      />
+      <UserDirectPermissionsModal
+        open={isDirectPermissionsModalOpen}
+        onOpenChange={setIsDirectPermissionsModalOpen}
         user={selectedUser}
       />
     </div>

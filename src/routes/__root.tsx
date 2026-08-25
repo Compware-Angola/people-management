@@ -7,7 +7,8 @@ import '../styles.css'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { Toaster } from 'sonner'
 import type { QueryClient } from '@tanstack/react-query'
-import { authStorage } from '@/lib/auth/auth-storage'
+import type { authStorage } from '@/lib/auth/auth-storage'
+import { FullPageLoading } from '@/components/loading'
 
 interface RouterContext {
   queryClient: QueryClient
@@ -15,8 +16,6 @@ interface RouterContext {
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
-  component: RootComponent,
-
   head: () => ({
     title: 'Gestão de Pessoas',
 
@@ -154,6 +153,9 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       },
     ],
   }),
+  component: RootComponent,
+  pendingComponent:FullPageLoading,
+
 })
 
 function RootComponent() {

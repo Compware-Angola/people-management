@@ -5,6 +5,7 @@ import type {
   CreateGroupDTO,
   CreatePermissionDTO,
   GroupsListParams,
+  MyPermissions,
   Permission,
   PermissionGroup,
   PermissionRelationStatus,
@@ -170,6 +171,10 @@ async function updateUserPermissionStatus(
   return parseOptionalJson<PermissionRelationStatus>(response)
 }
 
+async function myPermissions():Promise<{permissions:MyPermissions[]}> {
+  return gpApi.get<{permissions:MyPermissions[]}>('permissions/me').json()
+}
+
 export const permissionsService = {
   findAllGroups,
   createGroup,
@@ -187,4 +192,5 @@ export const permissionsService = {
   findUserGroups,
   updateGroupPermissionStatus,
   updateUserPermissionStatus,
+  my:myPermissions
 }
