@@ -80,3 +80,9 @@ export type AssignUsersDTO = {
 export type UpdateRelationStatusDTO = {
   status: PermissionStatus
 }
+
+export type MyPermissions = {
+  id: number
+  slug: string
+  description: string
+}

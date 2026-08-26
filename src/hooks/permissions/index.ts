@@ -12,7 +12,7 @@ import type {
   UpdatePermissionDTO,
   UpdateRelationStatusDTO,
 } from '@/services/permissions/permissions.types'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { queryOptions, useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
 export function usePermissionGroupsQuery(params?: GroupsListParams) {
@@ -267,4 +267,16 @@ export function useUpdateUserPermissionStatusMutation() {
       toast.error(await getApiErrorMessage(error))
     },
   })
+}
+
+
+
+export const myPermissionQueryOptions = queryOptions({
+  queryKey:  [QUERY_KEY.permissions, 'my'],
+  queryFn: () => permissionsService.my(),
+  staleTime: 5 * 60 * 1000,
+})
+
+export function useMyPermissionQuery() {
+  return useQuery(myPermissionQueryOptions)
 }

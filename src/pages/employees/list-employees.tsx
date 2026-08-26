@@ -32,6 +32,9 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { useMyPermissionQuery } from '@/hooks/permissions'
+import { hasPermission } from '@/utils/permissions.util'
+import { PermissionsEnum } from '@/enums/permissions.enum'
 
 export function ListEmployees() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -41,11 +44,17 @@ export function ListEmployees() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [detailsEmployeeId, setDetailsEmployeeId] = useState<number | null>(null)
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
+  const { data: myPermissions } = useMyPermissionQuery()
   const { data, isLoading, isError, refetch, isFetching } = useEmployeesQuery({
     page,
     limit,
   })
 
+  const permissions = myPermissions?.permissions ?? []
+  const canWriteEmployees = hasPermission(
+    permissions,
+    PermissionsEnum.WRITE_EMPLOYEES,
+  )
   const employees = data?.data ?? []
   const meta = data?.meta
   const filteredEmployees = searchTerm
@@ -186,19 +195,21 @@ export function ListEmployees() {
                           <TooltipContent>Ver detalhes</TooltipContent>
                         </Tooltip>
 
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => openEditModal(employee)}
-                            >
-                              <Pencil className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
+                        {canWriteEmployees && (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => openEditModal(employee)}
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                            </TooltipTrigger>
 
-                          <TooltipContent>Editar colaborador</TooltipContent>
-                        </Tooltip>
+                            <TooltipContent>Editar colaborador</TooltipContent>
+                          </Tooltip>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>

@@ -1,24 +1,36 @@
 export enum PermissionsEnum {
-  READ_AUDIT_LOG = 'read.audit_log',
+  // --- USERS ---
+  READ_USERS = 'read:users',
+  WRITE_USERS = 'write:users',
 
-  // --- DEPARTMENTS ---
-  CREATE_DEPARTMENT = 'create.department',
-  READ_DEPARTMENT = 'read.department',
-  UPDATE_DEPARTMENT = 'update.department',
-  DELETE_DEPARTMENT = 'delete.department',
-  MANAGE_DEPARTMENT_PERMISSIONS = 'manage.department_permissions',
-  MANAGE_DEPARTMENT_STATUS = 'manage.department_status',
+  // --- EMPLOYEES ---
+  READ_EMPLOYEES = 'read:employees',
+  WRITE_EMPLOYEES = 'write:employees',
 
-  // --- ADMIN ---
-  CREATE_ADMIN = 'create.admin',
-  READ_ADMIN = 'read.admin',
-  UPDATE_ADMIN = 'update.admin',
-  DELETE_ADMIN = 'delete.admin',
-  MANAGE_ADMIN_STATUS = 'manage.admin_status',
-  MANAGE_ADMIN_PERMISSIONS = 'manage.admin_permissions',
+  // --- REQUISITIONS ---
+  READ_REQUISITIONS = 'read:requisitions',
+  WRITE_REQUISITIONS = 'write:requisitions',
 
-  // --- PERMISSIONS ---
+  // --- VACANCIES ---
+  READ_VACANCIES = 'read:vacancies',
+  WRITE_VACANCIES = 'write:vacancies',
 
-  READ_PERMISSIONS = 'read.permissions',
-  UPDATE_PERMISSIONS = 'update.permissions',
+  // --- CONTRACTS ---
+  READ_CONTRACTS = 'read:contracts',
+  WRITE_CONTRACTS = 'write:contracts',
+
+  // --- LEAVES ---
+  READ_LEAVES = 'read:leaves',
+  WRITE_LEAVES = 'write:leaves',
+
+  // --- SALARIES ---
+  READ_SALARIES = 'read:salaries',
+  WRITE_SALARIES = 'write:salaries',
+
+  // --- SALARY PROCESSING ---
+  READ_SALARY_PROCESSING = 'read:salary-processing',
+  WRITE_SALARY_PROCESSING = 'write:salary-processing',
+
+  // --- GLOBAL ---
+  FULL_ACCESS = 'full_access'
 }
