@@ -2,6 +2,7 @@ export type PermissionStatus = 0 | 1
 
 export type Permission = {
   id: number
+  slug: string
   description: string
   status: PermissionStatus
   createdAt: string
@@ -55,6 +56,7 @@ export type GroupsListParams = {
 }
 
 export type CreatePermissionDTO = {
+  slug: string
   description: string
   status?: PermissionStatus
 }

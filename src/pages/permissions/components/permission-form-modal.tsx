@@ -35,6 +35,7 @@ const statusOptions = [
 
 function buildPayload(values: PermissionFormValues): CreatePermissionDTO {
   return {
+    slug: values.slug.trim(),
     description: values.description,
     status: Number(values.status) as CreatePermissionDTO['status'],
   }
@@ -85,7 +86,7 @@ export function PermissionFormModal({
           </DialogTitle>
           <DialogDescription>
             {isEdit
-              ? 'Atualize a descrição e o estado da permissão.'
+              ? 'Atualize a sigla, a descrição e o estado da permissão.'
               : 'Cadastre uma permissão para depois associá-la a grupos ou usuários.'}
           </DialogDescription>
         </DialogHeader>
@@ -97,6 +98,15 @@ export function PermissionFormModal({
             form.handleSubmit()
           }}
         >
+          <form.AppField name="slug">
+            {(field) => (
+              <field.TextField
+                label="Sigla"
+                placeholder="Ex: read:employees"
+              />
+            )}
+          </form.AppField>
+
           <form.AppField name="description">
             {(field) => (
               <field.TextField

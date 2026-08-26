@@ -28,6 +28,12 @@ export type RequisitionHiringType = RequisitionOption & {
   acronym: string
 }
 
+export type RequisitionVacancyRequestType = {
+  id: number
+  acronym: string
+  description: string
+}
+
 export type RequisitionRequester = {
   id: number
   name: string
@@ -62,6 +68,7 @@ export type Requisition = {
   quantity: number
   justification: string
   hiringType: RequisitionHiringType
+  vacancyRequestType?: RequisitionVacancyRequestType
   requester: RequisitionRequester
   state: RequisitionState
   authorizedQuantity: number | null
@@ -93,6 +100,7 @@ export type RequisitionsListParams = {
   costCenterId?: number
   positionId?: number
   hiringTypeId?: number
+  vacancyRequestTypeId?: number
   stateId?: number
   startDate?: string
   endDate?: string
@@ -105,6 +113,7 @@ export type CreateRequisitionDTO = {
   quantity: number
   justification: string
   hiringTypeId: number
+  vacancyRequestTypeId: number
 }
 
 export type UpdateRequisitionDTO = Partial<CreateRequisitionDTO>

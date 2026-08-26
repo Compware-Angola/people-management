@@ -16,4 +16,5 @@ export const QUERY_KEY = {
   vacations: 'vacations',
   vacancies: 'vacancies',
   vacancyStates: 'vacancy-states',
+  vacancyRequestTypes: 'vacancy-request-types',
 } as const

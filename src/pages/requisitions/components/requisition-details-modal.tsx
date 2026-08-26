@@ -95,6 +95,14 @@ export function RequisitionDetailsModal({
                 label="Tipo de contratação"
                 value={`${requisition.hiringType.acronym} - ${requisition.hiringType.description}`}
               />
+              <DetailItem
+                label="Tipo de requisição"
+                value={
+                  requisition.vacancyRequestType
+                    ? `${requisition.vacancyRequestType.acronym} - ${requisition.vacancyRequestType.description}`
+                    : null
+                }
+              />
               <DetailItem label="Quantidade" value={requisition.quantity} />
               <DetailItem
                 label="Quantidade autorizada"
