@@ -5,6 +5,7 @@ export const QUERY_KEY = {
   departments: 'departments',
   employees: 'employees',
   hiringTypes: 'hiring-types',
+  leaves: 'leaves',
   permissions: 'permissions',
   positions: 'positions',
   requisitions: 'requisitions',

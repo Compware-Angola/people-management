@@ -16,6 +16,7 @@ import {
   DEPARTMENTS_NAV,
   EMPLOYEES_NAV,
   HIRING_TYPES_NAV,
+  LEAVES_NAV,
   PERMISSION_GROUPS_NAV,
   PERMISSIONS_NAV,
   POSITIONS_NAV,
@@ -48,6 +49,7 @@ export function DashboardLayout({
           <NavMain items={SALARIES_NAV} />
           <NavMain items={ATTENDANCE_NAV} />
           <NavMain items={VACATIONS_NAV} />
+          <NavMain items={LEAVES_NAV} groupLabel="Licenças" />
           <NavMain items={BIOMETRICS_NAV} groupLabel="Biometria" />
 
         </SidebarContent>
