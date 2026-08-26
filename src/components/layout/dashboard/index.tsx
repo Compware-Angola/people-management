@@ -15,6 +15,7 @@ import {
   DASHBOARD_NAV,
   DEPARTMENTS_NAV,
   EMPLOYEES_NAV,
+  HIRING_TYPES_NAV,
   PERMISSION_GROUPS_NAV,
   PERMISSIONS_NAV,
   POSITIONS_NAV,
@@ -39,6 +40,7 @@ export function DashboardLayout({
           <NavMain items={DEPARTMENTS_NAV} />
           <NavMain items={COST_CENTERS_NAV} />
           <NavMain items={POSITIONS_NAV} />
+          <NavMain items={HIRING_TYPES_NAV} />
           <NavMain items={PERMISSIONS_NAV} />
           <NavMain items={PERMISSION_GROUPS_NAV} />
           <NavMain items={REQUISITIONS_NAV} />
