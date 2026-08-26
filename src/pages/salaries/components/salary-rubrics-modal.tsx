@@ -20,6 +20,7 @@ import { TableEmptyState, TableErrorState } from '@/components/table/table-state
 import { TableGroupRowSkeleton } from '@/components/table/table-skeleton'
 import {
   useAssociateRubricToStructureMutation,
+  useRubricsQuery,
   useSalaryStructureRubricsQuery,
 } from '@/hooks/salaries'
 import type { Salary } from '@/services/salaries/salaries.types'
@@ -64,8 +65,15 @@ export function SalaryRubricsModal({ open, onOpenChange, salary }: Props) {
     useSalaryStructureRubricsQuery(open ? salaryId : undefined)
   const { mutateAsync: associateRubric } =
     useAssociateRubricToStructureMutation()
+  const { data: availableRubricsData, isLoading: isLoadingAvailableRubrics } =
+    useRubricsQuery(open ? { status: 1, limit: 100 } : undefined)
 
   const rubrics = data?.rubrics ?? []
+  const availableRubrics = availableRubricsData?.data ?? []
+  const rubricOptions = availableRubrics.map((rubric) => ({
+    value: String(rubric.code),
+    label: `${rubric.code} - ${rubric.description} (${rubric.type} / ${rubric.valueType})`,
+  }))
   const loading = isLoading || isFetching
 
   const { form, canSubmit, isLoading: isSubmitting } =
@@ -109,11 +117,15 @@ export function SalaryRubricsModal({ open, onOpenChange, salary }: Props) {
         >
           <form.AppField name="rubricCode">
             {(field) => (
-              <field.TextField
-                label="Código da rubrica"
-                type="number"
-                min="1"
-                placeholder="Informe o código da rubrica"
+              <field.ComboboxField
+                label="Rubrica"
+                placeholder={
+                  isLoadingAvailableRubrics
+                    ? 'Carregando rubricas...'
+                    : 'Selecione a rubrica'
+                }
+                emptyMessage="Nenhuma rubrica ativa encontrada."
+                options={rubricOptions}
               />
             )}
           </form.AppField>

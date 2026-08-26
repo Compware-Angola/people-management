@@ -14,9 +14,9 @@ export function hasPermission(
   permissions: MyPermissions[],
   required: PermissionsEnum,
 ): boolean {
-  // if (hasFullAccess(permissions)) {
-  //   return true
-  // }
+  if (hasFullAccess(permissions)) {
+    return true
+  }
 
   return permissions.some(
     (permission) => permission.slug === required,

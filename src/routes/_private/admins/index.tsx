@@ -6,7 +6,7 @@ export const Route = createFileRoute('/_private/admins/')({
   loader:async({context:{queryClient}})=>{
     await loadAccessGuard(
       queryClient,
-      PermissionsEnum.CREATE_ADMIN,
+      PermissionsEnum.WRITE_USERS,
     
     )
   },

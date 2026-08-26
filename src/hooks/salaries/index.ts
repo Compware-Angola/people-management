@@ -7,6 +7,7 @@ import type {
   CreateSalaryDTO,
   CreateSalaryEmployeeDTO,
   CreateSalaryRubricDTO,
+  RubricListParams,
   SalaryListParams,
   UpdateSalaryDTO,
 } from '@/services/salaries/salaries.types'
@@ -46,6 +47,16 @@ export function useSalaryStructureRubricsQuery(id?: number) {
     queryFn: () => salariesService.findSalaryStructureWithRubrics(id!),
     enabled: Boolean(id),
     staleTime: 1000 * 60 * 5,
+  })
+}
+
+export function useRubricsQuery(params?: RubricListParams) {
+  return useQuery({
+    queryKey: [QUERY_KEY.salaries, 'rubrics-list', params],
+    queryFn: () => salariesService.findAllRubrics(params),
+    enabled: Boolean(params),
+    staleTime: 1000 * 60 * 5,
+    placeholderData: keepPreviousData,
   })
 }
 
@@ -104,6 +115,9 @@ export function useCreateRubricMutation() {
     mutationFn: (data: CreateRubricDTO) => salariesService.createRubric(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.salaries] })
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY.salaries, 'rubrics-list'],
+      })
       toast.success('Rubrica registrada com sucesso')
     },
     onError: async (error) => {

@@ -13,6 +13,10 @@ interface EmployeeTableActionsProps {
   onRegisterEmployee: (user: User) => void
   onManageGroups: (user: User) => void
   onManageDirectPermissions: (user: User) => void
+  canEditUser: boolean
+  canRegisterEmployee: boolean
+  canManageGroups: boolean
+  canManageDirectPermissions: boolean
 }
 
 export function EmployeeTableActions({
@@ -21,60 +25,72 @@ export function EmployeeTableActions({
   onRegisterEmployee,
   onManageGroups,
   onManageDirectPermissions,
+  canEditUser,
+  canRegisterEmployee,
+  canManageGroups,
+  canManageDirectPermissions,
 }: EmployeeTableActionsProps) {
   return (
     <div className="flex justify-end gap-1">
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => onManageGroups(user)}
-          >
-            <ShieldCheck className="h-4 w-4" />
-          </Button>
-        </TooltipTrigger>
+      {canManageGroups && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onManageGroups(user)}
+            >
+              <ShieldCheck className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
 
-        <TooltipContent>Grupos do utilizador</TooltipContent>
-      </Tooltip>
+          <TooltipContent>Grupos do utilizador</TooltipContent>
+        </Tooltip>
+      )}
 
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => onManageDirectPermissions(user)}
-          >
-            <KeyRound className="h-4 w-4" />
-          </Button>
-        </TooltipTrigger>
+      {canManageDirectPermissions && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onManageDirectPermissions(user)}
+            >
+              <KeyRound className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
 
-        <TooltipContent>Permissões diretas</TooltipContent>
-      </Tooltip>
+          <TooltipContent>Permissões diretas</TooltipContent>
+        </Tooltip>
+      )}
 
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button variant="ghost" size="icon" onClick={() => onEdit(user)}>
-            <Pencil className="h-4 w-4" />
-          </Button>
-        </TooltipTrigger>
+      {canEditUser && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="icon" onClick={() => onEdit(user)}>
+              <Pencil className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
 
-        <TooltipContent>Editar</TooltipContent>
-      </Tooltip>
+          <TooltipContent>Editar</TooltipContent>
+        </Tooltip>
+      )}
 
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => onRegisterEmployee(user)}
-          >
-            <UserPlus className="h-4 w-4" />
-          </Button>
-        </TooltipTrigger>
+      {canRegisterEmployee && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onRegisterEmployee(user)}
+            >
+              <UserPlus className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
 
-        <TooltipContent>Cadastrar como colaborador</TooltipContent>
-      </Tooltip>
+          <TooltipContent>Cadastrar como colaborador</TooltipContent>
+        </Tooltip>
+      )}
     </div>
   )
 }

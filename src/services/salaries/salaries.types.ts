@@ -72,6 +72,20 @@ export type Rubric = {
   createdAt?: string | null
 }
 
+export type RubricListResponse = {
+  data: Rubric[]
+  meta: PaginationMeta
+}
+
+export type RubricListParams = {
+  page?: number
+  limit?: number
+  search?: string
+  type?: RubricType
+  valueType?: RubricValueType
+  status?: SalaryStatus
+}
+
 export type CreateRubricDTO = {
   description: string
   type: RubricType

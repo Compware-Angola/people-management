@@ -7,6 +7,8 @@ import type {
   CreateSalaryEmployeeDTO,
   CreateSalaryRubricDTO,
   Rubric,
+  RubricListParams,
+  RubricListResponse,
   Salary,
   SalaryEmployee,
   SalaryListParams,
@@ -72,6 +74,23 @@ async function createRubric(payload: CreateRubricDTO): Promise<Rubric | void> {
   return parseOptionalJson<Rubric>(response)
 }
 
+async function findAllRubrics(
+  params?: RubricListParams,
+): Promise<RubricListResponse> {
+  return gpApi
+    .get('salaries/rubrics', {
+      searchParams: buildSearchParams({
+        page: params?.page ?? 1,
+        limit: params?.limit ?? 10,
+        search: params?.search,
+        type: params?.type,
+        valueType: params?.valueType,
+        status: params?.status,
+      }),
+    })
+    .json<RubricListResponse>()
+}
+
 async function associateRubricToStructure(
   payload: CreateSalaryRubricDTO,
 ): Promise<void> {
@@ -96,6 +115,7 @@ export const salariesService = {
   findEmployeeSalary,
   findEmployeeSalaryHistory,
   createRubric,
+  findAllRubrics,
   associateRubricToStructure,
   findSalaryStructureWithRubrics,
 }

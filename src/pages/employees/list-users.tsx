@@ -20,7 +20,7 @@ import { cn } from '@/lib/utils'
 import type { User } from '@/services/users/users.types'
 import { UserDirectPermissionsModal } from './components/user-direct-permissions-modal'
 import { UserGroupsModal } from './components/user-groups-modal'
-import { hasAllPermissions } from '@/utils/permissions.util'
+import { hasPermission } from '@/utils/permissions.util'
 import { useMyPermissionQuery } from '@/hooks/permissions'
 import { PermissionsEnum } from '@/enums/permissions.enum'
 
@@ -71,7 +71,11 @@ export function ListUsers() {
   }
   
 
-  const canCreate = hasAllPermissions(permissions, [PermissionsEnum.CREATE_DEPARTMENT])
+  const canWriteUsers = hasPermission(permissions, PermissionsEnum.WRITE_USERS)
+  const canWriteEmployees = hasPermission(
+    permissions,
+    PermissionsEnum.WRITE_EMPLOYEES,
+  )
 
   const total = meta?.total ?? 0
   const totalPages = meta?.totalPages ?? 1
@@ -102,7 +106,7 @@ export function ListUsers() {
         </div>
         <div className="flex items-center gap-2">
           {
-            canCreate && (<Button onClick={openCreateModal}>
+            canWriteUsers && (<Button onClick={openCreateModal}>
             <Plus className="mr-2 h-4 w-4" />
             Novo Utilizador
           </Button>)
@@ -136,6 +140,10 @@ export function ListUsers() {
           onRegisterEmployee={openCreateEmployeeModal}
           onManageGroups={openUserGroupsModal}
           onManageDirectPermissions={openDirectPermissionsModal}
+          canEditUser={canWriteUsers}
+          canRegisterEmployee={canWriteEmployees}
+          canManageGroups={canWriteUsers}
+          canManageDirectPermissions={canWriteUsers}
         />
 
         <Pagination

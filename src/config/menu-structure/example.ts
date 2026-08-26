@@ -14,15 +14,15 @@ export const EXAMPLE_NAV: NavItem[] = [
     title: 'Exemplo 1',
     icon: UserCog,
     url: '/admins',
-    permission: [PermissionsEnum.READ_ADMIN],
+    permission: [PermissionsEnum.READ_USERS],
   },
   {
     title: 'About',
     icon: Briefcase,
     url: '/about',
     permission: [
-      PermissionsEnum.READ_DEPARTMENT,
-      PermissionsEnum.READ_DEPARTMENT,
+      PermissionsEnum.READ_EMPLOYEES,
+      PermissionsEnum.READ_EMPLOYEES,
     ],
   },
   {
@@ -34,7 +34,7 @@ export const EXAMPLE_NAV: NavItem[] = [
         title: 'Exemplo 3-1',
         url: '/security/logs',
         icon: Eye,
-        permission: [PermissionsEnum.READ_AUDIT_LOG],
+        permission: [PermissionsEnum.READ_USERS],
       },
       {
         title: 'Exemplo 3-2',
