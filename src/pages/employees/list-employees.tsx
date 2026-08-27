@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Eye, Pencil, RefreshCcw, Users } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Eye, Pencil, RefreshCcw, Users, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import {
@@ -15,7 +15,7 @@ import { EmployeeStatusBadge } from './components/employee-status-badge'
 import { EmployeeBankModal } from './components/employee-bank-modal'
 import { EmployeeDetailsModal } from './components/employee-details-modal'
 import { Pagination } from '@/components/table/pagination'
-import { useEmployeesQuery } from '@/hooks/employees'
+import { employeesListQueryOptions, useEmployeesQuery } from '@/hooks/employees'
 import { cn } from '@/lib/utils'
 import type { Employee } from '@/services/employees/employees.types'
 import {
@@ -35,6 +35,8 @@ import {
 import { useMyPermissionQuery } from '@/hooks/permissions'
 import { hasPermission } from '@/utils/permissions.util'
 import { PermissionsEnum } from '@/enums/permissions.enum'
+import { Toolbar } from '@/components/toolbar'
+import { queryClient } from '@/lib/query-client'
 
 export function ListEmployees() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -42,7 +44,9 @@ export function ListEmployees() {
   const [limit, setLimit] = useState(10)
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-  const [detailsEmployeeId, setDetailsEmployeeId] = useState<number | null>(null)
+  const [detailsEmployeeId, setDetailsEmployeeId] = useState<number | null>(
+    null,
+  )
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
   const { data: myPermissions } = useMyPermissionQuery()
   const { data, isLoading, isError, refetch, isFetching } = useEmployeesQuery({
@@ -69,6 +73,16 @@ export function ListEmployees() {
   const rangeStart = total === 0 ? 0 : (currentPage - 1) * limit + 1
   const rangeEnd = Math.min(currentPage * limit, total)
   const loading = isLoading || isFetching
+  useEffect(() => {
+    if (page >= totalPages) return
+
+    queryClient.prefetchQuery(
+      employeesListQueryOptions({
+        page: page + 1,
+        limit,
+      }),
+    )
+  }, [page, limit, totalPages, queryClient])
   const openEditModal = (employee: Employee) => {
     setEditingEmployee(employee)
     setIsEditModalOpen(true)
@@ -78,8 +92,13 @@ export function ListEmployees() {
     setIsDetailsModalOpen(true)
   }
 
+  function clearFilters() {
+    setSearchTerm('')
+    setPage(1)
+  }
+
   return (
-    <div className="flex-1 space-y-6 p-8">
+    <div className="flex-1 space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="space-y-1">
           <Breadcrumb>
@@ -98,7 +117,11 @@ export function ListEmployees() {
             Consultar colaboradores já cadastrados
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <Toolbar>
+          <Button variant="outline" onClick={clearFilters}>
+            <X className="mr-2 h-4 w-4" />
+            Limpar filtros
+          </Button>
           <Button variant="outline" onClick={() => refetch()}>
             <RefreshCcw
               className={cn(
@@ -108,7 +131,7 @@ export function ListEmployees() {
             />
             Atualizar
           </Button>
-        </div>
+        </Toolbar>
       </div>
       <Card>
         <EmployeeFilters
@@ -231,6 +254,14 @@ export function ListEmployees() {
           onLimitChange={(value) => {
             setLimit(value)
             setPage(1)
+          }}
+          onPageHover={(pageNumber) => {
+            queryClient.prefetchQuery(
+              employeesListQueryOptions({
+                page: pageNumber,
+                limit,
+              }),
+            )
           }}
         />
       </Card>
