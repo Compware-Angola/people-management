@@ -14,12 +14,16 @@ import { Button } from '@/components/ui/button'
 
 import { queryClient } from '@/lib/query-client'
 import { QUERY_KEY } from '@/constants/query-key'
+import { useAuth } from '@/hooks/auth'
+import { PermissionsEnum } from '@/enums/permissions.enum'
 
 import { IntegrationsTable } from '../components/integrations-table'
 import { BiometricIntegrationFormModal } from '../components/biometric-integration-form-modal'
 
 export function ListBiometricEvents() {
     const [open, setOpen] = useState(false)
+    const { can } = useAuth()
+    const canWriteBiometrics = can(PermissionsEnum.WRITE_BIOMETRICS)
 
     function handleRefresh() {
         queryClient.invalidateQueries({
@@ -55,10 +59,12 @@ export function ListBiometricEvents() {
                         <RefreshCcw className="mr-2 h-4 w-4" />
                         Atualizar
                     </Button>
-                    <Button onClick={() => setOpen(true)}>
-                        <Plus className="mr-2 h-4 w-4" />
-                        Registrar Evento
-                    </Button>
+                    {canWriteBiometrics && (
+                        <Button onClick={() => setOpen(true)}>
+                            <Plus className="mr-2 h-4 w-4" />
+                            Registrar Evento
+                        </Button>
+                    )}
                 </div>
             </div>
             <IntegrationsTable />

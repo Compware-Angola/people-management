@@ -52,6 +52,8 @@ import { useHiringTypesQuery } from '@/hooks/hiring-types'
 import { usePositionsQuery } from '@/hooks/positions'
 import { useRequisitionStatesQuery } from '@/hooks/requisition-states'
 import { useVacancyRequestTypesQuery } from '@/hooks/vacancy-request-types'
+import { useAuth } from '@/hooks/auth'
+import { PermissionsEnum } from '@/enums/permissions.enum'
 import {
   useAnalyzeRequisitionFinancialMutation,
   useAnalyzeRequisitionRhMutation,
@@ -135,6 +137,8 @@ export function ListRequisitions() {
     null,
   )
   const [isActionDialogOpen, setIsActionDialogOpen] = useState(false)
+  const { can } = useAuth()
+  const canWriteRequisitions = can(PermissionsEnum.WRITE_REQUISITIONS)
 
   const { mutateAsync: removeRequisition, isPending: isRemoving } =
     useRemoveRequisitionMutation()
@@ -328,10 +332,12 @@ export function ListRequisitions() {
             Atualizar
           </Button>
 
-          <Button onClick={openCreateModal}>
-            <Plus className="mr-2 h-4 w-4" />
-            Nova Requisição
-          </Button>
+          {canWriteRequisitions && (
+            <Button onClick={openCreateModal}>
+              <Plus className="mr-2 h-4 w-4" />
+              Nova Requisição
+            </Button>
+          )}
         </div>
       </div>
 
@@ -627,7 +633,7 @@ export function ListRequisitions() {
                           <TooltipContent>Ver detalhes</TooltipContent>
                         </Tooltip>
 
-                        {isDraft(requisition) && (
+                        {canWriteRequisitions && isDraft(requisition) && (
                           <>
                             <Tooltip>
                               <TooltipTrigger asChild>
@@ -672,7 +678,8 @@ export function ListRequisitions() {
                           </>
                         )}
 
-                        {requisition.state.acronym === 'AGUARDANDO_RH' && (
+                        {canWriteRequisitions &&
+                          requisition.state.acronym === 'AGUARDANDO_RH' && (
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button
@@ -689,7 +696,8 @@ export function ListRequisitions() {
                           </Tooltip>
                         )}
 
-                        {requisition.state.acronym ===
+                        {canWriteRequisitions &&
+                          requisition.state.acronym ===
                           'AGUARDANDO_FINANCEIRO' && (
                           <Tooltip>
                             <TooltipTrigger asChild>
@@ -709,7 +717,7 @@ export function ListRequisitions() {
                           </Tooltip>
                         )}
 
-                        {canCancel(requisition) && (
+                        {canWriteRequisitions && canCancel(requisition) && (
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button

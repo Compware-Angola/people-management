@@ -36,7 +36,9 @@ import {
 import { Pagination } from '@/components/table/pagination'
 import { TableEmptyState, TableErrorState } from '@/components/table/table-state'
 import { TableGroupRowSkeleton } from '@/components/table/table-skeleton'
+import { useAuth } from '@/hooks/auth'
 import { useSalariesQuery } from '@/hooks/salaries'
+import { PermissionsEnum } from '@/enums/permissions.enum'
 import { formatDatePtAO } from '@/lib/date/format-date-pt-ao'
 import { cn } from '@/lib/utils'
 import type { Salary } from '@/services/salaries/salaries.types'
@@ -69,6 +71,8 @@ export function ListSalaries() {
   const [assigningSalary, setAssigningSalary] = useState<Salary | null>(null)
   const [selectedSalaryForRubrics, setSelectedSalaryForRubrics] =
     useState<Salary | null>(null)
+  const { can } = useAuth()
+  const canWriteSalaries = can(PermissionsEnum.WRITE_SALARIES)
 
   const { data, isLoading, isError, refetch, isFetching } = useSalariesQuery({
     page,
@@ -145,15 +149,19 @@ export function ListSalaries() {
             Atualizar
           </Button>
 
-          <Button onClick={openCreateModal}>
-            <Plus className="mr-2 h-4 w-4" />
-            Nova Estrutura
-          </Button>
+          {canWriteSalaries && (
+            <>
+              <Button onClick={openCreateModal}>
+                <Plus className="mr-2 h-4 w-4" />
+                Nova Estrutura
+              </Button>
 
-          <Button onClick={() => setIsRubricModalOpen(true)}>
-            <ReceiptText className="mr-2 h-4 w-4" />
-            Nova Rubrica
-          </Button>
+              <Button onClick={() => setIsRubricModalOpen(true)}>
+                <ReceiptText className="mr-2 h-4 w-4" />
+                Nova Rubrica
+              </Button>
+            </>
+          )}
         </div>
       </div>
 
@@ -244,20 +252,22 @@ export function ListSalaries() {
                     <TableCell>{formatDatePtAO(salary.createdAt)}</TableCell>
                     <TableCell>
                       <div className="flex justify-end gap-1">
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => openAssignmentModal(salary)}
-                            >
-                              <UserPlus className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            Atribuir a colaborador
-                          </TooltipContent>
-                        </Tooltip>
+                        {canWriteSalaries && (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => openAssignmentModal(salary)}
+                              >
+                                <UserPlus className="h-4 w-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              Atribuir a colaborador
+                            </TooltipContent>
+                          </Tooltip>
+                        )}
 
                         <Tooltip>
                           <TooltipTrigger asChild>
@@ -272,20 +282,22 @@ export function ListSalaries() {
                           <TooltipContent>Ver/associar rubricas</TooltipContent>
                         </Tooltip>
 
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => openEditModal(salary)}
-                            >
-                              <Pencil className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            Editar estrutura salarial
-                          </TooltipContent>
-                        </Tooltip>
+                        {canWriteSalaries && (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => openEditModal(salary)}
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              Editar estrutura salarial
+                            </TooltipContent>
+                          </Tooltip>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>
@@ -332,6 +344,7 @@ export function ListSalaries() {
         open={isSalaryRubricsModalOpen}
         onOpenChange={setIsSalaryRubricsModalOpen}
         salary={selectedSalaryForRubrics}
+        canAssociate={canWriteSalaries}
       />
     </div>
   )

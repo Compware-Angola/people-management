@@ -76,6 +76,10 @@ export function ListUsers() {
     permissions,
     PermissionsEnum.WRITE_EMPLOYEES,
   )
+  const canWritePermissions = hasPermission(
+    permissions,
+    PermissionsEnum.WRITE_PERMISSIONS,
+  )
 
   const total = meta?.total ?? 0
   const totalPages = meta?.totalPages ?? 1
@@ -142,8 +146,8 @@ export function ListUsers() {
           onManageDirectPermissions={openDirectPermissionsModal}
           canEditUser={canWriteUsers}
           canRegisterEmployee={canWriteEmployees}
-          canManageGroups={canWriteUsers}
-          canManageDirectPermissions={canWriteUsers}
+          canManageGroups={canWritePermissions}
+          canManageDirectPermissions={canWritePermissions}
         />
 
         <Pagination

@@ -40,6 +40,8 @@ import {
   useHiringTypesQuery,
   useRemoveHiringTypeMutation,
 } from '@/hooks/hiring-types'
+import { useAuth } from '@/hooks/auth'
+import { PermissionsEnum } from '@/enums/permissions.enum'
 import { formatDatePtAO } from '@/lib/date/format-date-pt-ao'
 import { cn } from '@/lib/utils'
 import type {
@@ -62,6 +64,8 @@ export function ListHiringTypes() {
   const [deletingHiringType, setDeletingHiringType] =
     useState<HiringType | null>(null)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const { can } = useAuth()
+  const canWriteHiringTypes = can(PermissionsEnum.WRITE_HIRING_TYPES)
   const { mutateAsync: removeHiringType, isPending: isRemoving } =
     useRemoveHiringTypeMutation()
 
@@ -146,10 +150,12 @@ export function ListHiringTypes() {
             Atualizar
           </Button>
 
-          <Button onClick={openCreateModal}>
-            <Plus className="mr-2 h-4 w-4" />
-            Novo Tipo
-          </Button>
+          {canWriteHiringTypes && (
+            <Button onClick={openCreateModal}>
+              <Plus className="mr-2 h-4 w-4" />
+              Novo Tipo
+            </Button>
+          )}
         </div>
       </div>
 
@@ -244,36 +250,40 @@ export function ListHiringTypes() {
                     <TableCell>{formatDatePtAO(hiringType.createdAt)}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => openEditModal(hiringType)}
-                            >
-                              <Pencil className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            Editar tipo de contratação
-                          </TooltipContent>
-                        </Tooltip>
+                        {canWriteHiringTypes && (
+                          <>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => openEditModal(hiringType)}
+                                >
+                                  <Pencil className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                Editar tipo de contratação
+                              </TooltipContent>
+                            </Tooltip>
 
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              disabled={isRemoving}
-                              onClick={() => openDeleteDialog(hiringType)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            Remover tipo de contratação
-                          </TooltipContent>
-                        </Tooltip>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  disabled={isRemoving}
+                                  onClick={() => openDeleteDialog(hiringType)}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                Remover tipo de contratação
+                              </TooltipContent>
+                            </Tooltip>
+                          </>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>

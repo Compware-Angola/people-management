@@ -34,7 +34,9 @@ import {
 import { Pagination } from '@/components/table/pagination'
 import { TableGroupRowSkeleton } from '@/components/table/table-skeleton'
 import { useEmployeesQuery } from '@/hooks/employees'
+import { useAuth } from '@/hooks/auth'
 import { useLeavesQuery } from '@/hooks/leaves'
+import { PermissionsEnum } from '@/enums/permissions.enum'
 import { cn } from '@/lib/utils'
 import type {
   Leave,
@@ -89,6 +91,8 @@ export function ListLeaves() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false)
   const [selectedLeave, setSelectedLeave] = useState<Leave | null>(null)
+  const { can } = useAuth()
+  const canWriteLeaves = can(PermissionsEnum.WRITE_LEAVES)
 
   const { data: employeesData } = useEmployeesQuery({
     page: 1,
@@ -167,10 +171,12 @@ export function ListLeaves() {
             Atualizar
           </Button>
 
-          <Button onClick={() => setIsCreateModalOpen(true)}>
-            <Plus className="mr-2 h-4 w-4" />
-            Registrar Licença
-          </Button>
+          {canWriteLeaves && (
+            <Button onClick={() => setIsCreateModalOpen(true)}>
+              <Plus className="mr-2 h-4 w-4" />
+              Registrar Licença
+            </Button>
+          )}
         </div>
       </div>
 
@@ -291,18 +297,20 @@ export function ListLeaves() {
                     <TableCell>{emptyValue(leave.approverId)}</TableCell>
                     <TableCell>{formatDate(leave.createdAt)}</TableCell>
                     <TableCell className="text-right">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => openStatusModal(leave)}
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>Atualizar estado</TooltipContent>
-                      </Tooltip>
+                      {canWriteLeaves && (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => openStatusModal(leave)}
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>Atualizar estado</TooltipContent>
+                        </Tooltip>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))
