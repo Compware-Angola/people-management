@@ -145,6 +145,12 @@ async function findUserGroups(userId: number): Promise<PermissionGroup[]> {
     .json<PermissionGroup[]>()
 }
 
+async function findUserDirectPermissions(userId: number): Promise<Permission[]> {
+  return gpApi
+    .get(`permissions/users/${userId}/direct-permissions`)
+    .json<Permission[]>()
+}
+
 async function updateGroupPermissionStatus(
   groupId: number,
   permissionId: number,
@@ -190,6 +196,7 @@ export const permissionsService = {
   assignUsersToGroup,
   assignDirectPermissionsToUser,
   findUserGroups,
+  findUserDirectPermissions,
   updateGroupPermissionStatus,
   updateUserPermissionStatus,
   my:myPermissions

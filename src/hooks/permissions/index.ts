@@ -58,6 +58,15 @@ export function useUserPermissionGroupsQuery(userId?: number) {
   })
 }
 
+export function useUserDirectPermissionsQuery(userId?: number) {
+  return useQuery({
+    queryKey: [QUERY_KEY.permissions, 'users', userId, 'direct-permissions'],
+    queryFn: () => permissionsService.findUserDirectPermissions(userId!),
+    enabled: Boolean(userId),
+    staleTime: 1000 * 60 * 5,
+  })
+}
+
 export function useCreatePermissionGroupMutation() {
   return useMutation({
     mutationFn: (data: CreateGroupDTO) => permissionsService.createGroup(data),
@@ -202,6 +211,14 @@ export function useAssignDirectPermissionsToUserMutation() {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.permissions] })
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEY.permissions, 'users', params.userId, 'groups'],
+      })
+      queryClient.invalidateQueries({
+        queryKey: [
+          QUERY_KEY.permissions,
+          'users',
+          params.userId,
+          'direct-permissions',
+        ],
       })
       toast.success('Permissões diretas atribuídas ao usuário com sucesso')
     },
