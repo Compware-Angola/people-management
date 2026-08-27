@@ -44,12 +44,14 @@ import {
 import { Pagination } from '@/components/table/pagination'
 import { TableEmptyState, TableErrorState } from '@/components/table/table-state'
 import { TableGroupRowSkeleton } from '@/components/table/table-skeleton'
+import { useAuth } from '@/hooks/auth'
 import {
   useReprocessSalaryMutation,
   useSalaryProcessingDetailsQuery,
   useSalaryProcessingQuery,
   useValidateSalaryProcessingMutation,
 } from '@/hooks/salary-processing'
+import { PermissionsEnum } from '@/enums/permissions.enum'
 import { formatDatePtAO } from '@/lib/date/format-date-pt-ao'
 import { cn } from '@/lib/utils'
 import type {
@@ -103,6 +105,10 @@ export function ListSalaryProcessing() {
   const [currentAction, setCurrentAction] =
     useState<SalaryProcessingAction | null>(null)
   const [isActionDialogOpen, setIsActionDialogOpen] = useState(false)
+  const { can } = useAuth()
+  const canWriteSalaryProcessing = can(
+    PermissionsEnum.WRITE_SALARY_PROCESSING,
+  )
 
   const params = {
     page,
@@ -213,10 +219,12 @@ export function ListSalaryProcessing() {
             Atualizar
           </Button>
 
-          <Button onClick={() => setIsFormModalOpen(true)}>
-            <Plus className="mr-2 h-4 w-4" />
-            Novo Processamento
-          </Button>
+          {canWriteSalaryProcessing && (
+            <Button onClick={() => setIsFormModalOpen(true)}>
+              <Plus className="mr-2 h-4 w-4" />
+              Novo Processamento
+            </Button>
+          )}
         </div>
       </div>
 
@@ -370,7 +378,7 @@ export function ListSalaryProcessing() {
                           <TooltipContent>Ver detalhes</TooltipContent>
                         </Tooltip>
 
-                        {canValidate(processing) ? (
+                        {canWriteSalaryProcessing && canValidate(processing) ? (
                           <>
                             <Tooltip>
                               <TooltipTrigger asChild>
@@ -404,7 +412,7 @@ export function ListSalaryProcessing() {
                           </>
                         ) : null}
 
-                        {canReprocess(processing) ? (
+                        {canWriteSalaryProcessing && canReprocess(processing) ? (
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button

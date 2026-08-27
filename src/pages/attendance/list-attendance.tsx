@@ -30,7 +30,9 @@ import {
   useAttendanceQuery,
   useRemoveAttendanceMutation,
 } from '@/hooks/attendance'
+import { useAuth } from '@/hooks/auth'
 import { useEmployeesQuery } from '@/hooks/employees'
+import { PermissionsEnum } from '@/enums/permissions.enum'
 import { cn } from '@/lib/utils'
 import type { Attendance } from '@/services/attendance/attendance.types'
 import { AttendanceFormModal } from './components/attendance-form-modal'
@@ -68,6 +70,8 @@ export function ListAttendance() {
   const [deletingAttendance, setDeletingAttendance] =
     useState<Attendance | null>(null)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const { can } = useAuth()
+  const canWriteAttendance = can(PermissionsEnum.WRITE_ATTENDANCE)
   const { mutateAsync: removeAttendance, isPending: isRemoving } =
     useRemoveAttendanceMutation()
 
@@ -151,10 +155,12 @@ export function ListAttendance() {
             Atualizar
           </Button>
 
-          <Button onClick={openCreateModal}>
-            <Plus className="mr-2 h-4 w-4" />
-            Registrar Assiduidade
-          </Button>
+          {canWriteAttendance && (
+            <Button onClick={openCreateModal}>
+              <Plus className="mr-2 h-4 w-4" />
+              Registrar Assiduidade
+            </Button>
+          )}
         </div>
       </div>
 
@@ -220,32 +226,40 @@ export function ListAttendance() {
                     <TableCell>{formatDate(attendance.createdAt)}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => openEditModal(attendance)}
-                            >
-                              <Pencil className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>Editar assiduidade</TooltipContent>
-                        </Tooltip>
+                        {canWriteAttendance && (
+                          <>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => openEditModal(attendance)}
+                                >
+                                  <Pencil className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                Editar assiduidade
+                              </TooltipContent>
+                            </Tooltip>
 
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              disabled={isRemoving}
-                              onClick={() => openDeleteDialog(attendance)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>Remover assiduidade</TooltipContent>
-                        </Tooltip>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  disabled={isRemoving}
+                                  onClick={() => openDeleteDialog(attendance)}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                Remover assiduidade
+                              </TooltipContent>
+                            </Tooltip>
+                          </>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>

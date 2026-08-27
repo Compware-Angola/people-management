@@ -40,6 +40,8 @@ import {
   useDepartmentsQuery,
   useRemoveDepartmentMutation,
 } from '@/hooks/departments'
+import { useAuth } from '@/hooks/auth'
+import { PermissionsEnum } from '@/enums/permissions.enum'
 import { formatDatePtAO } from '@/lib/date/format-date-pt-ao'
 import { cn } from '@/lib/utils'
 import type {
@@ -61,6 +63,8 @@ export function ListDepartments() {
   const [deletingDepartment, setDeletingDepartment] =
     useState<Department | null>(null)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const { can } = useAuth()
+  const canWriteDepartments = can(PermissionsEnum.WRITE_DEPARTMENTS)
   const { mutateAsync: removeDepartment, isPending: isRemoving } =
     useRemoveDepartmentMutation()
 
@@ -142,10 +146,12 @@ export function ListDepartments() {
             Atualizar
           </Button>
 
-          <Button onClick={openCreateModal}>
-            <Plus className="mr-2 h-4 w-4" />
-            Novo Departamento
-          </Button>
+          {canWriteDepartments && (
+            <Button onClick={openCreateModal}>
+              <Plus className="mr-2 h-4 w-4" />
+              Novo Departamento
+            </Button>
+          )}
         </div>
       </div>
 
@@ -228,32 +234,40 @@ export function ListDepartments() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => openEditModal(department)}
-                            >
-                              <Pencil className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>Editar departamento</TooltipContent>
-                        </Tooltip>
+                        {canWriteDepartments && (
+                          <>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => openEditModal(department)}
+                                >
+                                  <Pencil className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                Editar departamento
+                              </TooltipContent>
+                            </Tooltip>
 
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              disabled={isRemoving}
-                              onClick={() => openDeleteDialog(department)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>Remover departamento</TooltipContent>
-                        </Tooltip>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  disabled={isRemoving}
+                                  onClick={() => openDeleteDialog(department)}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                Remover departamento
+                              </TooltipContent>
+                            </Tooltip>
+                          </>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>

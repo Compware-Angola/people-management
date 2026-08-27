@@ -35,6 +35,7 @@ type Props = {
   open: boolean
   onOpenChange: (open: boolean) => void
   salary?: Salary | null
+  canAssociate?: boolean
 }
 
 function formatRubricValue(value: number, valueType: string) {
@@ -59,7 +60,12 @@ function buildPayload(
   }
 }
 
-export function SalaryRubricsModal({ open, onOpenChange, salary }: Props) {
+export function SalaryRubricsModal({
+  open,
+  onOpenChange,
+  salary,
+  canAssociate = true,
+}: Props) {
   const salaryId = salary?.id
   const { data, isLoading, isError, isFetching } =
     useSalaryStructureRubricsQuery(open ? salaryId : undefined)
@@ -108,43 +114,45 @@ export function SalaryRubricsModal({ open, onOpenChange, salary }: Props) {
           </DialogDescription>
         </DialogHeader>
 
-        <form
-          className="grid gap-3 md:grid-cols-[1fr_auto]"
-          onSubmit={(event) => {
-            event.preventDefault()
-            form.handleSubmit()
-          }}
-        >
-          <form.AppField name="rubricCode">
-            {(field) => (
-              <field.ComboboxField
-                label="Rubrica"
-                placeholder={
-                  isLoadingAvailableRubrics
-                    ? 'Carregando rubricas...'
-                    : 'Selecione a rubrica'
-                }
-                emptyMessage="Nenhuma rubrica ativa encontrada."
-                options={rubricOptions}
-              />
-            )}
-          </form.AppField>
-
-          <div className="flex items-end">
-            <Button
-              type="submit"
-              className="w-full md:w-auto"
-              disabled={!canSubmit || isSubmitting || !salary}
-            >
-              {isSubmitting ? (
-                <Loader2 className="animate-spin" />
-              ) : (
-                <Plus className="h-4 w-4" />
+        {canAssociate && (
+          <form
+            className="grid gap-3 md:grid-cols-[1fr_auto]"
+            onSubmit={(event) => {
+              event.preventDefault()
+              form.handleSubmit()
+            }}
+          >
+            <form.AppField name="rubricCode">
+              {(field) => (
+                <field.ComboboxField
+                  label="Rubrica"
+                  placeholder={
+                    isLoadingAvailableRubrics
+                      ? 'Carregando rubricas...'
+                      : 'Selecione a rubrica'
+                  }
+                  emptyMessage="Nenhuma rubrica ativa encontrada."
+                  options={rubricOptions}
+                />
               )}
-              Associar
-            </Button>
-          </div>
-        </form>
+            </form.AppField>
+
+            <div className="flex items-end">
+              <Button
+                type="submit"
+                className="w-full md:w-auto"
+                disabled={!canSubmit || isSubmitting || !salary}
+              >
+                {isSubmitting ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  <Plus className="h-4 w-4" />
+                )}
+                Associar
+              </Button>
+            </div>
+          </form>
+        )}
 
         <Card>
           <div className="overflow-x-auto">

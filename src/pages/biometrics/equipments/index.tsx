@@ -13,6 +13,8 @@ import { Button } from '@/components/ui/button'
 
 import { queryClient } from '@/lib/query-client'
 import { QUERY_KEY } from '@/constants/query-key'
+import { useAuth } from '@/hooks/auth'
+import { PermissionsEnum } from '@/enums/permissions.enum'
 
 import type { BiometricEquipment } from '@/services/biometrics/biometrics.types'
 
@@ -23,6 +25,8 @@ export function ListBiometricEquipments() {
     const [open, setOpen] = useState(false)
     const [editingEquipment, setEditingEquipment] =
         useState<BiometricEquipment | null>(null)
+    const { can } = useAuth()
+    const canWriteBiometrics = can(PermissionsEnum.WRITE_BIOMETRICS)
 
     function handleRefresh() {
         queryClient.invalidateQueries({
@@ -70,13 +74,18 @@ export function ListBiometricEquipments() {
                         Atualizar
                     </Button>
 
-                    <Button onClick={handleCreate}>
-                        <Plus className="mr-2 h-4 w-4" />
-                        Cadastrar Equipamento
-                    </Button>
+                    {canWriteBiometrics && (
+                        <Button onClick={handleCreate}>
+                            <Plus className="mr-2 h-4 w-4" />
+                            Cadastrar Equipamento
+                        </Button>
+                    )}
                 </div>
             </div>
-            <EquipmentsTable onEdit={handleEdit} />
+            <EquipmentsTable
+                onEdit={handleEdit}
+                canEdit={canWriteBiometrics}
+            />
             <BiometricEquipmentFormModal
                 open={open}
                 onOpenChange={setOpen}
