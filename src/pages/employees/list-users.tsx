@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Plus, RefreshCcw } from 'lucide-react'
+import { Plus, RefreshCcw, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import {
@@ -23,6 +23,7 @@ import { UserGroupsModal } from './components/user-groups-modal'
 import { hasPermission } from '@/utils/permissions.util'
 import { useMyPermissionQuery } from '@/hooks/permissions'
 import { PermissionsEnum } from '@/enums/permissions.enum'
+import { Toolbar } from '@/components/toolbar'
 
 export function ListUsers() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -69,6 +70,10 @@ export function ListUsers() {
     setSelectedUser(user)
     setIsDirectPermissionsModalOpen(true)
   }
+    function clearFilters() {
+    setSearchTerm('')
+    setPage(1)
+  }
   
 
   const canWriteUsers = hasPermission(permissions, PermissionsEnum.WRITE_USERS)
@@ -108,14 +113,17 @@ export function ListUsers() {
             Consulte utilizadores e cadastre colaboradores a partir da listagem
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <Toolbar>
           {
             canWriteUsers && (<Button onClick={openCreateModal}>
             <Plus className="mr-2 h-4 w-4" />
             Novo Utilizador
           </Button>)
           }
-         
+          <Button variant="outline" onClick={clearFilters}>
+            <X className="mr-2 h-4 w-4" />
+            Limpar filtros
+          </Button>
           <Button variant="outline" onClick={() => refetch()}>
             <RefreshCcw
               className={cn(
@@ -125,7 +133,9 @@ export function ListUsers() {
             />
             Atualizar
           </Button>
-        </div>
+      
+        </Toolbar>
+       
       </div>
       <Card>
         <EmployeeFilters

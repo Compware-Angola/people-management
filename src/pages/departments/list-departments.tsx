@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Building2, Pencil, Plus, RefreshCcw, Trash2 } from 'lucide-react'
+import { Building2, Pencil, Plus, RefreshCcw, Trash2, X } from 'lucide-react'
 
 import {
   Breadcrumb,
@@ -51,6 +51,7 @@ import type {
 import { DepartmentDeleteDialog } from './components/department-delete-dialog'
 import { DepartmentFormModal } from './components/department-form-modal'
 import { DepartmentStatusBadge } from './components/department-status-badge'
+import { Toolbar } from '@/components/toolbar'
 
 export function ListDepartments() {
   const [page, setPage] = useState(1)
@@ -114,8 +115,14 @@ export function ListDepartments() {
     setDeletingDepartment(null)
   }
 
+    function clearFilters() {
+    setSearch('')
+    setStatus("all")
+    setPage(1)
+  }
+
   return (
-    <div className="flex-1 space-y-6 p-8">
+    <div className="flex-1 space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="space-y-1">
           <Breadcrumb>
@@ -136,7 +143,18 @@ export function ListDepartments() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={() => refetch()}>
+          <Toolbar>
+            {canWriteDepartments && (
+            <Button onClick={openCreateModal}>
+              <Plus className="mr-2 h-4 w-4" />
+              Novo Departamento
+            </Button>
+          )}
+          <Button variant="outline" onClick={clearFilters}>
+            <X className="mr-2 h-4 w-4" />
+            Limpar filtros
+          </Button>
+             <Button variant="outline" onClick={() => refetch()}>
             <RefreshCcw
               className={cn(
                 'mr-2 h-4 w-4',
@@ -146,12 +164,9 @@ export function ListDepartments() {
             Atualizar
           </Button>
 
-          {canWriteDepartments && (
-            <Button onClick={openCreateModal}>
-              <Plus className="mr-2 h-4 w-4" />
-              Novo Departamento
-            </Button>
-          )}
+          
+          </Toolbar>
+         
         </div>
       </div>
 
@@ -276,7 +291,6 @@ export function ListDepartments() {
             </TableBody>
           </Table>
         </div>
-
         <Pagination
           page={currentPage}
           totalPages={totalPages}
@@ -289,6 +303,7 @@ export function ListDepartments() {
             setLimit(value)
             setPage(1)
           }}
+          loading
         />
       </Card>
 
