@@ -24,6 +24,10 @@ export type EmployeeTableProps = {
   onRegisterEmployee: (user: User) => void
   onManageGroups: (user: User) => void
   onManageDirectPermissions: (user: User) => void
+  canEditUser: boolean
+  canRegisterEmployee: boolean
+  canManageGroups: boolean
+  canManageDirectPermissions: boolean
   isError?: boolean
 }
 
@@ -34,6 +38,10 @@ export function EmployeeTable({
   onRegisterEmployee,
   onManageGroups,
   onManageDirectPermissions,
+  canEditUser,
+  canRegisterEmployee,
+  canManageGroups,
+  canManageDirectPermissions,
   isError,
 }: EmployeeTableProps) {
   return (
@@ -104,6 +112,10 @@ export function EmployeeTable({
                     onRegisterEmployee={onRegisterEmployee}
                     onManageGroups={onManageGroups}
                     onManageDirectPermissions={onManageDirectPermissions}
+                    canEditUser={canEditUser}
+                    canRegisterEmployee={canRegisterEmployee}
+                    canManageGroups={canManageGroups}
+                    canManageDirectPermissions={canManageDirectPermissions}
                   />
                 </TableCell>
               </TableRow>

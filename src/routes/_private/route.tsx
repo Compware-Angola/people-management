@@ -3,6 +3,7 @@ import { DashboardLayout } from '@/components/layout/dashboard'
 import { authStorage } from '@/lib/auth/auth-storage'
 import { currentUserQueryOptions } from '@/hooks/auth'
 
+
 export const Route = createFileRoute('/_private')({
   beforeLoad: async ({ context, location }) => {
     if (!authStorage.isAuthenticated()) {
@@ -33,7 +34,9 @@ export const Route = createFileRoute('/_private')({
     }
   },
   component: RouteComponent,
+  
   notFoundComponent: () => <NotFoundPrivate />,
+ 
 })
 
 function RouteComponent() {

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Plus, RefreshCcw } from 'lucide-react'
+import { Plus, RefreshCcw, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import {
@@ -20,6 +20,10 @@ import { cn } from '@/lib/utils'
 import type { User } from '@/services/users/users.types'
 import { UserDirectPermissionsModal } from './components/user-direct-permissions-modal'
 import { UserGroupsModal } from './components/user-groups-modal'
+import { hasPermission } from '@/utils/permissions.util'
+import { useMyPermissionQuery } from '@/hooks/permissions'
+import { PermissionsEnum } from '@/enums/permissions.enum'
+import { Toolbar } from '@/components/toolbar'
 
 export function ListUsers() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -30,6 +34,7 @@ export function ListUsers() {
   const [isUserGroupsModalOpen, setIsUserGroupsModalOpen] = useState(false)
   const [isDirectPermissionsModalOpen, setIsDirectPermissionsModalOpen] =
     useState(false)
+  const {data:myPermissions } = useMyPermissionQuery()
   const [editingUser, setEditingUser] = useState<User | null>(null)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const { data, isLoading, isError, refetch, isFetching } = useUsersQuery({
@@ -37,7 +42,7 @@ export function ListUsers() {
     limit,
     name: searchTerm || undefined,
   })
-
+ const permissions =  myPermissions?.permissions ?? []
   const users = data?.data ?? []
   const meta = data?.meta
 
@@ -65,6 +70,21 @@ export function ListUsers() {
     setSelectedUser(user)
     setIsDirectPermissionsModalOpen(true)
   }
+    function clearFilters() {
+    setSearchTerm('')
+    setPage(1)
+  }
+  
+
+  const canWriteUsers = hasPermission(permissions, PermissionsEnum.WRITE_USERS)
+  const canWriteEmployees = hasPermission(
+    permissions,
+    PermissionsEnum.WRITE_EMPLOYEES,
+  )
+  const canWritePermissions = hasPermission(
+    permissions,
+    PermissionsEnum.WRITE_PERMISSIONS,
+  )
 
   const total = meta?.total ?? 0
   const totalPages = meta?.totalPages ?? 1
@@ -93,10 +113,16 @@ export function ListUsers() {
             Consulte utilizadores e cadastre colaboradores a partir da listagem
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button onClick={openCreateModal}>
+        <Toolbar>
+          {
+            canWriteUsers && (<Button onClick={openCreateModal}>
             <Plus className="mr-2 h-4 w-4" />
             Novo Utilizador
+          </Button>)
+          }
+          <Button variant="outline" onClick={clearFilters}>
+            <X className="mr-2 h-4 w-4" />
+            Limpar filtros
           </Button>
           <Button variant="outline" onClick={() => refetch()}>
             <RefreshCcw
@@ -107,7 +133,9 @@ export function ListUsers() {
             />
             Atualizar
           </Button>
-        </div>
+      
+        </Toolbar>
+       
       </div>
       <Card>
         <EmployeeFilters
@@ -126,6 +154,10 @@ export function ListUsers() {
           onRegisterEmployee={openCreateEmployeeModal}
           onManageGroups={openUserGroupsModal}
           onManageDirectPermissions={openDirectPermissionsModal}
+          canEditUser={canWriteUsers}
+          canRegisterEmployee={canWriteEmployees}
+          canManageGroups={canWritePermissions}
+          canManageDirectPermissions={canWritePermissions}
         />
 
         <Pagination

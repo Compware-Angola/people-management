@@ -12,7 +12,7 @@ import type {
   UpdatePermissionDTO,
   UpdateRelationStatusDTO,
 } from '@/services/permissions/permissions.types'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { queryOptions, useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
 export function usePermissionGroupsQuery(params?: GroupsListParams) {
@@ -53,6 +53,15 @@ export function useUserPermissionGroupsQuery(userId?: number) {
   return useQuery({
     queryKey: [QUERY_KEY.permissions, 'users', userId, 'groups'],
     queryFn: () => permissionsService.findUserGroups(userId!),
+    enabled: Boolean(userId),
+    staleTime: 1000 * 60 * 5,
+  })
+}
+
+export function useUserDirectPermissionsQuery(userId?: number) {
+  return useQuery({
+    queryKey: [QUERY_KEY.permissions, 'users', userId, 'direct-permissions'],
+    queryFn: () => permissionsService.findUserDirectPermissions(userId!),
     enabled: Boolean(userId),
     staleTime: 1000 * 60 * 5,
   })
@@ -203,6 +212,14 @@ export function useAssignDirectPermissionsToUserMutation() {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEY.permissions, 'users', params.userId, 'groups'],
       })
+      queryClient.invalidateQueries({
+        queryKey: [
+          QUERY_KEY.permissions,
+          'users',
+          params.userId,
+          'direct-permissions',
+        ],
+      })
       toast.success('Permissões diretas atribuídas ao usuário com sucesso')
     },
     onError: async (error) => {
@@ -267,4 +284,16 @@ export function useUpdateUserPermissionStatusMutation() {
       toast.error(await getApiErrorMessage(error))
     },
   })
+}
+
+
+
+export const myPermissionQueryOptions = queryOptions({
+  queryKey:  [QUERY_KEY.permissions, 'my'],
+  queryFn: () => permissionsService.my(),
+  staleTime: 5 * 60 * 1000,
+})
+
+export function useMyPermissionQuery() {
+  return useQuery(myPermissionQueryOptions)
 }

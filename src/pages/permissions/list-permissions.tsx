@@ -60,7 +60,8 @@ export function ListPermissions() {
     return data.filter((permission) => {
       const matchesSearch =
         !normalizedSearch ||
-        permission.description.toLowerCase().includes(normalizedSearch)
+        permission.description.toLowerCase().includes(normalizedSearch) ||
+        permission.slug.toLowerCase().includes(normalizedSearch)
 
       const matchesStatus =
         status === 'all' || String(permission.status) === status
@@ -112,7 +113,7 @@ export function ListPermissions() {
             <Input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Pesquisar por descrição"
+              placeholder="Pesquisar por sigla ou descrição"
             />
           </div>
 
@@ -138,6 +139,7 @@ export function ListPermissions() {
             <TableHeader>
               <TableRow>
                 <TableHead>Código</TableHead>
+                <TableHead>Sigla</TableHead>
                 <TableHead>Descrição</TableHead>
                 <TableHead>Estado</TableHead>
                 <TableHead>Criada em</TableHead>
@@ -146,10 +148,10 @@ export function ListPermissions() {
 
             <TableBody>
               {loading ? (
-                <TableGroupRowSkeleton rows={10} columns={4} />
+                <TableGroupRowSkeleton rows={10} columns={5} />
               ) : isError ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="h-40 text-center">
+                  <TableCell colSpan={5} className="h-40 text-center">
                     <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
                       <KeyRound className="h-8 w-8 text-destructive" />
                       <span className="font-medium text-destructive">
@@ -164,7 +166,7 @@ export function ListPermissions() {
                 </TableRow>
               ) : filteredPermissions.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="h-32 text-center">
+                  <TableCell colSpan={5} className="h-32 text-center">
                     <div className="flex flex-col items-center gap-2 text-muted-foreground">
                       <KeyRound className="h-8 w-8" />
                       <span>Nenhuma permissão encontrada.</span>
@@ -175,6 +177,9 @@ export function ListPermissions() {
                 filteredPermissions.map((permission) => (
                   <TableRow key={permission.id}>
                     <TableCell>{permission.id}</TableCell>
+                    <TableCell className="font-mono text-xs">
+                      {permission.slug}
+                    </TableCell>
                     <TableCell className="font-medium">
                       {permission.description}
                     </TableCell>

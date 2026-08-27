@@ -41,6 +41,8 @@ import {
   useRemoveCostCenterMutation,
 } from '@/hooks/cost-centers'
 import { useDepartmentsQuery } from '@/hooks/departments'
+import { useAuth } from '@/hooks/auth'
+import { PermissionsEnum } from '@/enums/permissions.enum'
 import { formatDatePtAO } from '@/lib/date/format-date-pt-ao'
 import { cn } from '@/lib/utils'
 import type {
@@ -63,6 +65,8 @@ export function ListCostCenters() {
   const [deletingCostCenter, setDeletingCostCenter] =
     useState<CostCenter | null>(null)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const { can } = useAuth()
+  const canWriteCostCenters = can(PermissionsEnum.WRITE_COST_CENTERS)
   const { mutateAsync: removeCostCenter, isPending: isRemoving } =
     useRemoveCostCenterMutation()
 
@@ -155,10 +159,12 @@ export function ListCostCenters() {
             Atualizar
           </Button>
 
-          <Button onClick={openCreateModal}>
-            <Plus className="mr-2 h-4 w-4" />
-            Novo Centro de Custo
-          </Button>
+          {canWriteCostCenters && (
+            <Button onClick={openCreateModal}>
+              <Plus className="mr-2 h-4 w-4" />
+              Novo Centro de Custo
+            </Button>
+          )}
         </div>
       </div>
 
@@ -271,34 +277,40 @@ export function ListCostCenters() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => openEditModal(costCenter)}
-                            >
-                              <Pencil className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>Editar centro de custo</TooltipContent>
-                        </Tooltip>
+                        {canWriteCostCenters && (
+                          <>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => openEditModal(costCenter)}
+                                >
+                                  <Pencil className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                Editar centro de custo
+                              </TooltipContent>
+                            </Tooltip>
 
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              disabled={isRemoving}
-                              onClick={() => openDeleteDialog(costCenter)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            Remover centro de custo
-                          </TooltipContent>
-                        </Tooltip>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  disabled={isRemoving}
+                                  onClick={() => openDeleteDialog(costCenter)}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                Remover centro de custo
+                              </TooltipContent>
+                            </Tooltip>
+                          </>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>

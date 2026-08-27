@@ -51,6 +51,9 @@ import { useDepartmentsQuery } from '@/hooks/departments'
 import { useHiringTypesQuery } from '@/hooks/hiring-types'
 import { usePositionsQuery } from '@/hooks/positions'
 import { useRequisitionStatesQuery } from '@/hooks/requisition-states'
+import { useVacancyRequestTypesQuery } from '@/hooks/vacancy-request-types'
+import { useAuth } from '@/hooks/auth'
+import { PermissionsEnum } from '@/enums/permissions.enum'
 import {
   useAnalyzeRequisitionFinancialMutation,
   useAnalyzeRequisitionRhMutation,
@@ -116,6 +119,7 @@ export function ListRequisitions() {
   const [stateId, setStateId] = useState('all')
   const [positionId, setPositionId] = useState('all')
   const [hiringTypeId, setHiringTypeId] = useState('all')
+  const [vacancyRequestTypeId, setVacancyRequestTypeId] = useState('all')
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [isFormModalOpen, setIsFormModalOpen] = useState(false)
@@ -133,6 +137,8 @@ export function ListRequisitions() {
     null,
   )
   const [isActionDialogOpen, setIsActionDialogOpen] = useState(false)
+  const { can } = useAuth()
+  const canWriteRequisitions = can(PermissionsEnum.WRITE_REQUISITIONS)
 
   const { mutateAsync: removeRequisition, isPending: isRemoving } =
     useRemoveRequisitionMutation()
@@ -155,6 +161,9 @@ export function ListRequisitions() {
     ...(stateId !== 'all' ? { stateId: Number(stateId) } : {}),
     ...(positionId !== 'all' ? { positionId: Number(positionId) } : {}),
     ...(hiringTypeId !== 'all' ? { hiringTypeId: Number(hiringTypeId) } : {}),
+    ...(vacancyRequestTypeId !== 'all'
+      ? { vacancyRequestTypeId: Number(vacancyRequestTypeId) }
+      : {}),
     ...(startDate ? { startDate } : {}),
     ...(endDate ? { endDate } : {}),
   }
@@ -182,6 +191,11 @@ export function ListRequisitions() {
     status: 1,
   })
   const { data: hiringTypesData } = useHiringTypesQuery({
+    page: 1,
+    limit: 100,
+    status: 1,
+  })
+  const { data: vacancyRequestTypesData } = useVacancyRequestTypesQuery({
     page: 1,
     limit: 100,
     status: 1,
@@ -318,10 +332,12 @@ export function ListRequisitions() {
             Atualizar
           </Button>
 
-          <Button onClick={openCreateModal}>
-            <Plus className="mr-2 h-4 w-4" />
-            Nova Requisição
-          </Button>
+          {canWriteRequisitions && (
+            <Button onClick={openCreateModal}>
+              <Plus className="mr-2 h-4 w-4" />
+              Nova Requisição
+            </Button>
+          )}
         </div>
       </div>
 
@@ -477,6 +493,32 @@ export function ListRequisitions() {
           </div>
 
           <div className="space-y-2">
+            <Label>Tipo de requisição</Label>
+            <Select
+              value={vacancyRequestTypeId}
+              onValueChange={(value) => {
+                setVacancyRequestTypeId(value)
+                resetPage()
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Tipo de requisição" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os tipos</SelectItem>
+                {vacancyRequestTypesData?.data.map((vacancyRequestType) => (
+                  <SelectItem
+                    key={vacancyRequestType.id}
+                    value={String(vacancyRequestType.id)}
+                  >
+                    {vacancyRequestType.description}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
             <Label>Data inicial</Label>
             <Input
               type="date"
@@ -511,6 +553,7 @@ export function ListRequisitions() {
                 <TableHead>Departamento</TableHead>
                 <TableHead>Centro de custo</TableHead>
                 <TableHead>Cargo</TableHead>
+                <TableHead>Tipo de requisição</TableHead>
                 <TableHead>Quantidade</TableHead>
                 <TableHead>Estado</TableHead>
                 <TableHead>Solicitante</TableHead>
@@ -521,10 +564,10 @@ export function ListRequisitions() {
 
             <TableBody>
               {loading ? (
-                <TableGroupRowSkeleton rows={10} columns={9} />
+                <TableGroupRowSkeleton rows={10} columns={10} />
               ) : isError ? (
                 <TableRow>
-                  <TableCell colSpan={9} className="h-40 text-center">
+                  <TableCell colSpan={10} className="h-40 text-center">
                     <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
                       <FileText className="h-8 w-8 text-destructive" />
                       <span className="font-medium text-destructive">
@@ -539,7 +582,7 @@ export function ListRequisitions() {
                 </TableRow>
               ) : requisitionRecords.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={9} className="h-32 text-center">
+                  <TableCell colSpan={10} className="h-32 text-center">
                     <div className="flex flex-col items-center gap-2 text-muted-foreground">
                       <FileText className="h-8 w-8" />
                       <span>Nenhuma requisição encontrada.</span>
@@ -560,6 +603,11 @@ export function ListRequisitions() {
                     </TableCell>
                     <TableCell>
                       {emptyValue(requisition.position.description)}
+                    </TableCell>
+                    <TableCell>
+                      {emptyValue(
+                        requisition.vacancyRequestType?.description,
+                      )}
                     </TableCell>
                     <TableCell>{requisition.quantity}</TableCell>
                     <TableCell>
@@ -585,7 +633,7 @@ export function ListRequisitions() {
                           <TooltipContent>Ver detalhes</TooltipContent>
                         </Tooltip>
 
-                        {isDraft(requisition) && (
+                        {canWriteRequisitions && isDraft(requisition) && (
                           <>
                             <Tooltip>
                               <TooltipTrigger asChild>
@@ -630,7 +678,8 @@ export function ListRequisitions() {
                           </>
                         )}
 
-                        {requisition.state.acronym === 'AGUARDANDO_RH' && (
+                        {canWriteRequisitions &&
+                          requisition.state.acronym === 'AGUARDANDO_RH' && (
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button
@@ -647,7 +696,8 @@ export function ListRequisitions() {
                           </Tooltip>
                         )}
 
-                        {requisition.state.acronym ===
+                        {canWriteRequisitions &&
+                          requisition.state.acronym ===
                           'AGUARDANDO_FINANCEIRO' && (
                           <Tooltip>
                             <TooltipTrigger asChild>
@@ -667,7 +717,7 @@ export function ListRequisitions() {
                           </Tooltip>
                         )}
 
-                        {canCancel(requisition) && (
+                        {canWriteRequisitions && canCancel(requisition) && (
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button

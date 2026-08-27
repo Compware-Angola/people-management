@@ -35,6 +35,7 @@ async function findAll(
         costCenterId: params?.costCenterId,
         positionId: params?.positionId,
         hiringTypeId: params?.hiringTypeId,
+        vacancyRequestTypeId: params?.vacancyRequestTypeId,
         stateId: params?.stateId,
         startDate: params?.startDate,
         endDate: params?.endDate,

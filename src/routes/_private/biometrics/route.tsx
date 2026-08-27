@@ -1,3 +1,5 @@
+import { PermissionsEnum } from '@/enums/permissions.enum'
+import { loadAccessGuard } from '@/utils/access-route-guard'
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_private/biometrics')({
@@ -7,6 +9,9 @@ export const Route = createFileRoute('/_private/biometrics')({
         to: '/biometrics/equipments',
       })
     }
+  },
+  loader: async ({ context: { queryClient } }) => {
+    await loadAccessGuard(queryClient, PermissionsEnum.READ_BIOMETRICS)
   },
   component: RouteComponent,
 })

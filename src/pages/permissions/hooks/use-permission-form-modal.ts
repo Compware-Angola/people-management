@@ -7,6 +7,10 @@ import { useAppForm } from '@/components/forms'
 import type { Permission } from '@/services/permissions/permissions.types'
 
 export const permissionFormSchema = z.object({
+  slug: z
+    .string()
+    .min(1, 'Sigla é obrigatória')
+    .max(120, 'Sigla deve ter no máximo 120 caracteres'),
   description: z
     .string()
     .min(1, 'Descrição é obrigatória')
@@ -17,6 +21,7 @@ export const permissionFormSchema = z.object({
 export type PermissionFormValues = z.infer<typeof permissionFormSchema>
 
 const defaultValues: PermissionFormValues = {
+  slug: '',
   description: '',
   status: '1',
 }
@@ -48,6 +53,7 @@ export function usePermissionFormModal({
 
     if (permission) {
       form.reset({
+        slug: permission.slug,
         description: permission.description,
         status: String(permission.status) as PermissionFormValues['status'],
       })

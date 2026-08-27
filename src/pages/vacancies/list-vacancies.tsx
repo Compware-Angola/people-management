@@ -52,6 +52,7 @@ import { TableGroupRowSkeleton } from '@/components/table/table-skeleton'
 import { useDepartmentsQuery } from '@/hooks/departments'
 import { useHiringTypesQuery } from '@/hooks/hiring-types'
 import { usePositionsQuery } from '@/hooks/positions'
+import { useAuth } from '@/hooks/auth'
 import {
   useCancelVacancyMutation,
   useCloseVacancyMutation,
@@ -62,6 +63,7 @@ import {
   useVacancyDetailsQuery,
 } from '@/hooks/vacancies'
 import { useVacancyStatesQuery } from '@/hooks/vacancy-states'
+import { PermissionsEnum } from '@/enums/permissions.enum'
 import { cn } from '@/lib/utils'
 import type {
   Vacancy,
@@ -143,6 +145,8 @@ export function ListVacancies() {
   const [actionVacancy, setActionVacancy] = useState<Vacancy | null>(null)
   const [currentAction, setCurrentAction] = useState<VacancyAction | null>(null)
   const [isActionDialogOpen, setIsActionDialogOpen] = useState(false)
+  const { can } = useAuth()
+  const canWriteVacancies = can(PermissionsEnum.WRITE_VACANCIES)
 
   const { mutateAsync: publishVacancy, isPending: isPublishing } =
     usePublishVacancyMutation()
@@ -305,10 +309,12 @@ export function ListVacancies() {
             Atualizar
           </Button>
 
-          <Button onClick={openCreateModal}>
-            <Plus className="mr-2 h-4 w-4" />
-            Nova Vaga
-          </Button>
+          {canWriteVacancies && (
+            <Button onClick={openCreateModal}>
+              <Plus className="mr-2 h-4 w-4" />
+              Nova Vaga
+            </Button>
+          )}
         </div>
       </div>
 
@@ -557,7 +563,7 @@ export function ListVacancies() {
                           <TooltipContent>Ver detalhes</TooltipContent>
                         </Tooltip>
 
-                        {canEdit(vacancy) && (
+                        {canWriteVacancies && canEdit(vacancy) && (
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button
@@ -572,7 +578,7 @@ export function ListVacancies() {
                           </Tooltip>
                         )}
 
-                        {canEdit(vacancy) && (
+                        {canWriteVacancies && canEdit(vacancy) && (
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button
@@ -587,7 +593,7 @@ export function ListVacancies() {
                           </Tooltip>
                         )}
 
-                        {canPublish(vacancy) && (
+                        {canWriteVacancies && canPublish(vacancy) && (
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button
@@ -608,7 +614,7 @@ export function ListVacancies() {
                           </Tooltip>
                         )}
 
-                        {canSuspend(vacancy) && (
+                        {canWriteVacancies && canSuspend(vacancy) && (
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button
@@ -625,7 +631,7 @@ export function ListVacancies() {
                           </Tooltip>
                         )}
 
-                        {canReactivate(vacancy) && (
+                        {canWriteVacancies && canReactivate(vacancy) && (
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button
@@ -642,7 +648,7 @@ export function ListVacancies() {
                           </Tooltip>
                         )}
 
-                        {canClose(vacancy) && (
+                        {canWriteVacancies && canClose(vacancy) && (
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button
@@ -657,7 +663,7 @@ export function ListVacancies() {
                           </Tooltip>
                         )}
 
-                        {canCancel(vacancy) && (
+                        {canWriteVacancies && canCancel(vacancy) && (
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button
@@ -683,14 +689,15 @@ export function ListVacancies() {
         </div>
 
         <Pagination
-          currentPage={currentPage}
+          page={currentPage}
           totalPages={totalPages}
-          totalItems={total}
-          itemsPerPage={limit}
-          startItem={rangeStart}
-          endItem={rangeEnd}
+          total={total}
+          limit={limit}
+          rangeStart={rangeStart}
+          rangeEnd={rangeEnd}
+          loading={isLoading}
           onPageChange={setPage}
-          onItemsPerPageChange={(value) => {
+          onLimitChange={(value) => {
             setLimit(value)
             setPage(1)
           }}

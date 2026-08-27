@@ -44,9 +44,10 @@ function formatDate(value?: string | null) {
 
 type Props = {
   onEdit: (equipment: BiometricEquipment) => void
+  canEdit?: boolean
 }
 
-export function EquipmentsTable({ onEdit }: Props) {
+export function EquipmentsTable({ onEdit, canEdit = true }: Props) {
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
   const { data, isLoading, isError, isFetching } = useBiometricEquipmentsQuery({
@@ -119,18 +120,20 @@ export function EquipmentsTable({ onEdit }: Props) {
                   </TableCell>
                   <TableCell>{formatDate(equipment.createdAt)}</TableCell>
                   <TableCell className="text-right">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => onEdit(equipment)}
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>Editar equipamento</TooltipContent>
-                    </Tooltip>
+                    {canEdit && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => onEdit(equipment)}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Editar equipamento</TooltipContent>
+                      </Tooltip>
+                    )}
                   </TableCell>
                 </TableRow>
               ))

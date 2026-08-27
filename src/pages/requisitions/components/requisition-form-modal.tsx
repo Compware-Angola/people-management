@@ -12,6 +12,7 @@ import { useMyDepartmentsQuery } from '@/hooks/departments'
 import { useCostCentersQuery } from '@/hooks/cost-centers'
 import { useHiringTypesQuery } from '@/hooks/hiring-types'
 import { usePositionsQuery } from '@/hooks/positions'
+import { useVacancyRequestTypesQuery } from '@/hooks/vacancy-request-types'
 import {
   useCreateRequisitionMutation,
   useUpdateRequisitionMutation,
@@ -32,14 +33,21 @@ type Props = {
 }
 
 function buildPayload(values: RequisitionFormValues): CreateRequisitionDTO {
-  return {
+  const payload: CreateRequisitionDTO = {
     departmentId: Number(values.departmentId),
     costCenterId: Number(values.costCenterId),
     positionId: Number(values.positionId),
     hiringTypeId: Number(values.hiringTypeId),
+    vacancyRequestTypeId: Number(values.vacancyRequestTypeId),
     quantity: Number(values.quantity),
     justification: values.justification,
   }
+
+  if (!values.vacancyRequestTypeId) {
+    delete (payload as Partial<CreateRequisitionDTO>).vacancyRequestTypeId
+  }
+
+  return payload
 }
 
 export function RequisitionFormModal({
@@ -58,6 +66,10 @@ export function RequisitionFormModal({
     usePositionsQuery({ page: 1, limit: 100, status: 1 })
   const { data: hiringTypesData, isLoading: isLoadingHiringTypes } =
     useHiringTypesQuery({ page: 1, limit: 100, status: 1 })
+  const {
+    data: vacancyRequestTypesData,
+    isLoading: isLoadingVacancyRequestTypes,
+  } = useVacancyRequestTypesQuery({ page: 1, limit: 100, status: 1 })
 
   const departmentOptions =
     departmentsData?.departments.map((department) => ({
@@ -83,6 +95,12 @@ export function RequisitionFormModal({
     hiringTypesData?.data.map((hiringType) => ({
       label: `${hiringType.acronym} - ${hiringType.description}`,
       value: String(hiringType.code),
+    })) ?? []
+
+  const vacancyRequestTypeOptions =
+    vacancyRequestTypesData?.data.map((vacancyRequestType) => ({
+      label: `${vacancyRequestType.acronym} - ${vacancyRequestType.description}`,
+      value: String(vacancyRequestType.id),
     })) ?? []
 
   const { form, canSubmit, isLoading } = useRequisitionFormModal({
@@ -195,6 +213,21 @@ export function RequisitionFormModal({
                   }
                   emptyMessage="Nenhum tipo de contratação encontrado."
                   options={hiringTypeOptions}
+                />
+              )}
+            </form.AppField>
+
+            <form.AppField name="vacancyRequestTypeId">
+              {(field) => (
+                <field.ComboboxField
+                  label="Tipo de requisição"
+                  placeholder={
+                    isLoadingVacancyRequestTypes
+                      ? 'Carregando tipos de requisição...'
+                      : 'Selecionar tipo de requisição'
+                  }
+                  emptyMessage="Nenhum tipo de requisição encontrado."
+                  options={vacancyRequestTypeOptions}
                 />
               )}
             </form.AppField>

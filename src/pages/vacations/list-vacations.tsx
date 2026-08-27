@@ -30,6 +30,8 @@ import {
   useRemoveVacationMutation,
   useVacationsQuery,
 } from '@/hooks/vacations'
+import { useAuth } from '@/hooks/auth'
+import { PermissionsEnum } from '@/enums/permissions.enum'
 import { cn } from '@/lib/utils'
 import type { Vacation } from '@/services/vacations/vacations.types'
 import { VacationDeleteDialog } from './components/vacation-delete-dialog'
@@ -65,6 +67,8 @@ export function ListVacations() {
     null,
   )
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const { can } = useAuth()
+  const canWriteVacations = can(PermissionsEnum.WRITE_VACATIONS)
   const { mutateAsync: removeVacation, isPending: isRemoving } =
     useRemoveVacationMutation()
 
@@ -137,10 +141,12 @@ export function ListVacations() {
             Atualizar
           </Button>
 
-          <Button onClick={openCreateModal}>
-            <Plus className="mr-2 h-4 w-4" />
-            Registrar Férias
-          </Button>
+          {canWriteVacations && (
+            <Button onClick={openCreateModal}>
+              <Plus className="mr-2 h-4 w-4" />
+              Registrar Férias
+            </Button>
+          )}
         </div>
       </div>
 
@@ -209,32 +215,36 @@ export function ListVacations() {
                     <TableCell>{formatDate(vacation.createdAt)}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => openEditModal(vacation)}
-                            >
-                              <Pencil className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>Editar férias</TooltipContent>
-                        </Tooltip>
+                        {canWriteVacations && (
+                          <>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => openEditModal(vacation)}
+                                >
+                                  <Pencil className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>Editar férias</TooltipContent>
+                            </Tooltip>
 
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              disabled={isRemoving}
-                              onClick={() => openDeleteDialog(vacation)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>Remover férias</TooltipContent>
-                        </Tooltip>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  disabled={isRemoving}
+                                  onClick={() => openDeleteDialog(vacation)}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>Remover férias</TooltipContent>
+                            </Tooltip>
+                          </>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>

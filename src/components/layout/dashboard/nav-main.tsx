@@ -87,8 +87,6 @@ export function NavMain({ items, groupLabel }: Props) {
     return filterNavItems(items, can)
   }, [items, can])
 
-  if (filteredItems.length === 0) return null
-
   const hasActiveItem = filteredItems.some((item) => {
     if (item.items?.length) {
       return item.items.some((child) =>
@@ -100,6 +98,8 @@ export function NavMain({ items, groupLabel }: Props) {
   })
 
   const [open, setOpen] = useState(() => hasActiveItem)
+
+  if (filteredItems.length === 0) return null
 
   const menu = (
     <SidebarMenu>

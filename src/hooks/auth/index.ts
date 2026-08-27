@@ -5,6 +5,9 @@ import { toast } from 'sonner'
 import { authStorage } from '@/lib/auth/auth-storage'
 import { getApiErrorMessage } from '@/lib/api/get-api-error-message'
 import { getCurrentUser, login } from '@/services/auth'
+import type { PermissionsEnum } from '@/enums/permissions.enum'
+import { hasAnyPermission, normalizePermissions } from '@/utils/permissions.util'
+import { useMyPermissionQuery } from '@/hooks/permissions'
 
 export const currentUserQueryOptions = () =>
   queryOptions({
@@ -25,10 +28,21 @@ export function useAuth() {
     () => authStorage.getToken(),
     () => null,
   )
+  const { data: permissionResponse } = useMyPermissionQuery()
+  const permissions = permissionResponse?.permissions ?? []
 
   return {
     token,
     isAuthenticated: !!token,
+    can: (required: PermissionsEnum | PermissionsEnum[]) => {
+      const requiredPermissions = normalizePermissions(required)
+
+      if (requiredPermissions.length === 0) {
+        return true
+      }
+
+      return hasAnyPermission(permissions, requiredPermissions)
+    },
   }
 }
 

@@ -5,6 +5,7 @@ import type {
   CreateGroupDTO,
   CreatePermissionDTO,
   GroupsListParams,
+  MyPermissions,
   Permission,
   PermissionGroup,
   PermissionRelationStatus,
@@ -144,6 +145,12 @@ async function findUserGroups(userId: number): Promise<PermissionGroup[]> {
     .json<PermissionGroup[]>()
 }
 
+async function findUserDirectPermissions(userId: number): Promise<Permission[]> {
+  return gpApi
+    .get(`permissions/users/${userId}/direct-permissions`)
+    .json<Permission[]>()
+}
+
 async function updateGroupPermissionStatus(
   groupId: number,
   permissionId: number,
@@ -170,6 +177,10 @@ async function updateUserPermissionStatus(
   return parseOptionalJson<PermissionRelationStatus>(response)
 }
 
+async function myPermissions():Promise<{permissions:MyPermissions[]}> {
+  return gpApi.get<{permissions:MyPermissions[]}>('permissions/me').json()
+}
+
 export const permissionsService = {
   findAllGroups,
   createGroup,
@@ -185,6 +196,8 @@ export const permissionsService = {
   assignUsersToGroup,
   assignDirectPermissionsToUser,
   findUserGroups,
+  findUserDirectPermissions,
   updateGroupPermissionStatus,
   updateUserPermissionStatus,
+  my:myPermissions
 }

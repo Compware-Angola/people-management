@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Check, KeyRound, Loader2, Save, Search, X } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -13,6 +13,7 @@ import {
 import { Input } from '@/components/ui/input'
 import {
   useAssignDirectPermissionsToUserMutation,
+  useUserDirectPermissionsQuery,
   usePermissionsQuery,
 } from '@/hooks/permissions'
 import { cn } from '@/lib/utils'
@@ -36,10 +37,20 @@ export function UserDirectPermissionsModal({
 }: Props) {
   const [search, setSearch] = useState('')
   const [selectedIds, setSelectedIds] = useState<number[]>([])
+  const { data: directPermissions = [], isLoading: isLoadingDirectPermissions } =
+    useUserDirectPermissionsQuery(open ? user?.id : undefined)
   const { data: permissions = [], isLoading: isLoadingPermissions } =
     usePermissionsQuery()
   const { mutateAsync: assignDirectPermissions, isPending: isSaving } =
     useAssignDirectPermissionsToUserMutation()
+
+  useEffect(() => {
+    if (!open) return
+
+    setSelectedIds(
+      directPermissions.map((permission) => permission.id),
+    )
+  }, [open, directPermissions])
 
   const filteredPermissions = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase()
@@ -52,6 +63,8 @@ export function UserDirectPermissionsModal({
       return permission.description.toLowerCase().includes(normalizedSearch)
     })
   }, [permissions, search])
+
+  const loading = isLoadingDirectPermissions || isLoadingPermissions
 
   function togglePermission(permission: Permission) {
     setSelectedIds((current) => {
@@ -115,7 +128,7 @@ export function UserDirectPermissionsModal({
         </div>
 
         <div className="max-h-96 overflow-y-auto rounded-lg border">
-          {isLoadingPermissions ? (
+          {loading ? (
             <div className="flex h-40 items-center justify-center gap-2 text-sm text-muted-foreground">
               <Loader2 className="h-4 w-4 animate-spin" />
               Carregando permissões...

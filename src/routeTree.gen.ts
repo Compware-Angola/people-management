@@ -17,11 +17,16 @@ import { Route as PrivateBiometricsRouteRouteImport } from './routes/_private/bi
 import { Route as PrivateVacationsIndexRouteImport } from './routes/_private/vacations/index'
 import { Route as PrivateVacanciesIndexRouteImport } from './routes/_private/vacancies/index'
 import { Route as PrivateUsersIndexRouteImport } from './routes/_private/users/index'
+import { Route as PrivateSalaryProcessingIndexRouteImport } from './routes/_private/salary-processing/index'
+import { Route as PrivateSalariesIndexRouteImport } from './routes/_private/salaries/index'
 import { Route as PrivateRequisitionsIndexRouteImport } from './routes/_private/requisitions/index'
 import { Route as PrivatePositionsIndexRouteImport } from './routes/_private/positions/index'
 import { Route as PrivatePermissionsIndexRouteImport } from './routes/_private/permissions/index'
 import { Route as PrivatePermissionGroupsIndexRouteImport } from './routes/_private/permission-groups/index'
+import { Route as PrivateLeavesIndexRouteImport } from './routes/_private/leaves/index'
+import { Route as PrivateHiringTypesIndexRouteImport } from './routes/_private/hiring-types/index'
 import { Route as PrivateEmployeesIndexRouteImport } from './routes/_private/employees/index'
+import { Route as PrivateEmployeeSalariesIndexRouteImport } from './routes/_private/employee-salaries/index'
 import { Route as PrivateDepartmentsIndexRouteImport } from './routes/_private/departments/index'
 import { Route as PrivateCostCentersIndexRouteImport } from './routes/_private/cost-centers/index'
 import { Route as PrivateAttendanceIndexRouteImport } from './routes/_private/attendance/index'
@@ -69,6 +74,17 @@ const PrivateUsersIndexRoute = PrivateUsersIndexRouteImport.update({
   path: '/users/',
   getParentRoute: () => PrivateRouteRoute,
 } as any)
+const PrivateSalaryProcessingIndexRoute =
+  PrivateSalaryProcessingIndexRouteImport.update({
+    id: '/salary-processing/',
+    path: '/salary-processing/',
+    getParentRoute: () => PrivateRouteRoute,
+  } as any)
+const PrivateSalariesIndexRoute = PrivateSalariesIndexRouteImport.update({
+  id: '/salaries/',
+  path: '/salaries/',
+  getParentRoute: () => PrivateRouteRoute,
+} as any)
 const PrivateRequisitionsIndexRoute =
   PrivateRequisitionsIndexRouteImport.update({
     id: '/requisitions/',
@@ -91,11 +107,27 @@ const PrivatePermissionGroupsIndexRoute =
     path: '/permission-groups/',
     getParentRoute: () => PrivateRouteRoute,
   } as any)
+const PrivateLeavesIndexRoute = PrivateLeavesIndexRouteImport.update({
+  id: '/leaves/',
+  path: '/leaves/',
+  getParentRoute: () => PrivateRouteRoute,
+} as any)
+const PrivateHiringTypesIndexRoute = PrivateHiringTypesIndexRouteImport.update({
+  id: '/hiring-types/',
+  path: '/hiring-types/',
+  getParentRoute: () => PrivateRouteRoute,
+} as any)
 const PrivateEmployeesIndexRoute = PrivateEmployeesIndexRouteImport.update({
   id: '/employees/',
   path: '/employees/',
   getParentRoute: () => PrivateRouteRoute,
 } as any)
+const PrivateEmployeeSalariesIndexRoute =
+  PrivateEmployeeSalariesIndexRouteImport.update({
+    id: '/employee-salaries/',
+    path: '/employee-salaries/',
+    getParentRoute: () => PrivateRouteRoute,
+  } as any)
 const PrivateDepartmentsIndexRoute = PrivateDepartmentsIndexRouteImport.update({
   id: '/departments/',
   path: '/departments/',
@@ -149,11 +181,16 @@ export interface FileRoutesByFullPath {
   '/attendance/': typeof PrivateAttendanceIndexRoute
   '/cost-centers/': typeof PrivateCostCentersIndexRoute
   '/departments/': typeof PrivateDepartmentsIndexRoute
+  '/employee-salaries/': typeof PrivateEmployeeSalariesIndexRoute
   '/employees/': typeof PrivateEmployeesIndexRoute
+  '/hiring-types/': typeof PrivateHiringTypesIndexRoute
+  '/leaves/': typeof PrivateLeavesIndexRoute
   '/permission-groups/': typeof PrivatePermissionGroupsIndexRoute
   '/permissions/': typeof PrivatePermissionsIndexRoute
   '/positions/': typeof PrivatePositionsIndexRoute
   '/requisitions/': typeof PrivateRequisitionsIndexRoute
+  '/salaries/': typeof PrivateSalariesIndexRoute
+  '/salary-processing/': typeof PrivateSalaryProcessingIndexRoute
   '/users/': typeof PrivateUsersIndexRoute
   '/vacancies/': typeof PrivateVacanciesIndexRoute
   '/vacations/': typeof PrivateVacationsIndexRoute
@@ -170,11 +207,16 @@ export interface FileRoutesByTo {
   '/attendance': typeof PrivateAttendanceIndexRoute
   '/cost-centers': typeof PrivateCostCentersIndexRoute
   '/departments': typeof PrivateDepartmentsIndexRoute
+  '/employee-salaries': typeof PrivateEmployeeSalariesIndexRoute
   '/employees': typeof PrivateEmployeesIndexRoute
+  '/hiring-types': typeof PrivateHiringTypesIndexRoute
+  '/leaves': typeof PrivateLeavesIndexRoute
   '/permission-groups': typeof PrivatePermissionGroupsIndexRoute
   '/permissions': typeof PrivatePermissionsIndexRoute
   '/positions': typeof PrivatePositionsIndexRoute
   '/requisitions': typeof PrivateRequisitionsIndexRoute
+  '/salaries': typeof PrivateSalariesIndexRoute
+  '/salary-processing': typeof PrivateSalaryProcessingIndexRoute
   '/users': typeof PrivateUsersIndexRoute
   '/vacancies': typeof PrivateVacanciesIndexRoute
   '/vacations': typeof PrivateVacationsIndexRoute
@@ -194,11 +236,16 @@ export interface FileRoutesById {
   '/_private/attendance/': typeof PrivateAttendanceIndexRoute
   '/_private/cost-centers/': typeof PrivateCostCentersIndexRoute
   '/_private/departments/': typeof PrivateDepartmentsIndexRoute
+  '/_private/employee-salaries/': typeof PrivateEmployeeSalariesIndexRoute
   '/_private/employees/': typeof PrivateEmployeesIndexRoute
+  '/_private/hiring-types/': typeof PrivateHiringTypesIndexRoute
+  '/_private/leaves/': typeof PrivateLeavesIndexRoute
   '/_private/permission-groups/': typeof PrivatePermissionGroupsIndexRoute
   '/_private/permissions/': typeof PrivatePermissionsIndexRoute
   '/_private/positions/': typeof PrivatePositionsIndexRoute
   '/_private/requisitions/': typeof PrivateRequisitionsIndexRoute
+  '/_private/salaries/': typeof PrivateSalariesIndexRoute
+  '/_private/salary-processing/': typeof PrivateSalaryProcessingIndexRoute
   '/_private/users/': typeof PrivateUsersIndexRoute
   '/_private/vacancies/': typeof PrivateVacanciesIndexRoute
   '/_private/vacations/': typeof PrivateVacationsIndexRoute
@@ -217,11 +264,16 @@ export interface FileRouteTypes {
     | '/attendance/'
     | '/cost-centers/'
     | '/departments/'
+    | '/employee-salaries/'
     | '/employees/'
+    | '/hiring-types/'
+    | '/leaves/'
     | '/permission-groups/'
     | '/permissions/'
     | '/positions/'
     | '/requisitions/'
+    | '/salaries/'
+    | '/salary-processing/'
     | '/users/'
     | '/vacancies/'
     | '/vacations/'
@@ -238,11 +290,16 @@ export interface FileRouteTypes {
     | '/attendance'
     | '/cost-centers'
     | '/departments'
+    | '/employee-salaries'
     | '/employees'
+    | '/hiring-types'
+    | '/leaves'
     | '/permission-groups'
     | '/permissions'
     | '/positions'
     | '/requisitions'
+    | '/salaries'
+    | '/salary-processing'
     | '/users'
     | '/vacancies'
     | '/vacations'
@@ -261,11 +318,16 @@ export interface FileRouteTypes {
     | '/_private/attendance/'
     | '/_private/cost-centers/'
     | '/_private/departments/'
+    | '/_private/employee-salaries/'
     | '/_private/employees/'
+    | '/_private/hiring-types/'
+    | '/_private/leaves/'
     | '/_private/permission-groups/'
     | '/_private/permissions/'
     | '/_private/positions/'
     | '/_private/requisitions/'
+    | '/_private/salaries/'
+    | '/_private/salary-processing/'
     | '/_private/users/'
     | '/_private/vacancies/'
     | '/_private/vacations/'
@@ -335,6 +397,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateUsersIndexRouteImport
       parentRoute: typeof PrivateRouteRoute
     }
+    '/_private/salary-processing/': {
+      id: '/_private/salary-processing/'
+      path: '/salary-processing'
+      fullPath: '/salary-processing/'
+      preLoaderRoute: typeof PrivateSalaryProcessingIndexRouteImport
+      parentRoute: typeof PrivateRouteRoute
+    }
+    '/_private/salaries/': {
+      id: '/_private/salaries/'
+      path: '/salaries'
+      fullPath: '/salaries/'
+      preLoaderRoute: typeof PrivateSalariesIndexRouteImport
+      parentRoute: typeof PrivateRouteRoute
+    }
     '/_private/requisitions/': {
       id: '/_private/requisitions/'
       path: '/requisitions'
@@ -363,11 +439,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivatePermissionGroupsIndexRouteImport
       parentRoute: typeof PrivateRouteRoute
     }
+    '/_private/leaves/': {
+      id: '/_private/leaves/'
+      path: '/leaves'
+      fullPath: '/leaves/'
+      preLoaderRoute: typeof PrivateLeavesIndexRouteImport
+      parentRoute: typeof PrivateRouteRoute
+    }
+    '/_private/hiring-types/': {
+      id: '/_private/hiring-types/'
+      path: '/hiring-types'
+      fullPath: '/hiring-types/'
+      preLoaderRoute: typeof PrivateHiringTypesIndexRouteImport
+      parentRoute: typeof PrivateRouteRoute
+    }
     '/_private/employees/': {
       id: '/_private/employees/'
       path: '/employees'
       fullPath: '/employees/'
       preLoaderRoute: typeof PrivateEmployeesIndexRouteImport
+      parentRoute: typeof PrivateRouteRoute
+    }
+    '/_private/employee-salaries/': {
+      id: '/_private/employee-salaries/'
+      path: '/employee-salaries'
+      fullPath: '/employee-salaries/'
+      preLoaderRoute: typeof PrivateEmployeeSalariesIndexRouteImport
       parentRoute: typeof PrivateRouteRoute
     }
     '/_private/departments/': {
@@ -454,11 +551,16 @@ interface PrivateRouteRouteChildren {
   PrivateAttendanceIndexRoute: typeof PrivateAttendanceIndexRoute
   PrivateCostCentersIndexRoute: typeof PrivateCostCentersIndexRoute
   PrivateDepartmentsIndexRoute: typeof PrivateDepartmentsIndexRoute
+  PrivateEmployeeSalariesIndexRoute: typeof PrivateEmployeeSalariesIndexRoute
   PrivateEmployeesIndexRoute: typeof PrivateEmployeesIndexRoute
+  PrivateHiringTypesIndexRoute: typeof PrivateHiringTypesIndexRoute
+  PrivateLeavesIndexRoute: typeof PrivateLeavesIndexRoute
   PrivatePermissionGroupsIndexRoute: typeof PrivatePermissionGroupsIndexRoute
   PrivatePermissionsIndexRoute: typeof PrivatePermissionsIndexRoute
   PrivatePositionsIndexRoute: typeof PrivatePositionsIndexRoute
   PrivateRequisitionsIndexRoute: typeof PrivateRequisitionsIndexRoute
+  PrivateSalariesIndexRoute: typeof PrivateSalariesIndexRoute
+  PrivateSalaryProcessingIndexRoute: typeof PrivateSalaryProcessingIndexRoute
   PrivateUsersIndexRoute: typeof PrivateUsersIndexRoute
   PrivateVacanciesIndexRoute: typeof PrivateVacanciesIndexRoute
   PrivateVacationsIndexRoute: typeof PrivateVacationsIndexRoute
@@ -473,11 +575,16 @@ const PrivateRouteRouteChildren: PrivateRouteRouteChildren = {
   PrivateAttendanceIndexRoute: PrivateAttendanceIndexRoute,
   PrivateCostCentersIndexRoute: PrivateCostCentersIndexRoute,
   PrivateDepartmentsIndexRoute: PrivateDepartmentsIndexRoute,
+  PrivateEmployeeSalariesIndexRoute: PrivateEmployeeSalariesIndexRoute,
   PrivateEmployeesIndexRoute: PrivateEmployeesIndexRoute,
+  PrivateHiringTypesIndexRoute: PrivateHiringTypesIndexRoute,
+  PrivateLeavesIndexRoute: PrivateLeavesIndexRoute,
   PrivatePermissionGroupsIndexRoute: PrivatePermissionGroupsIndexRoute,
   PrivatePermissionsIndexRoute: PrivatePermissionsIndexRoute,
   PrivatePositionsIndexRoute: PrivatePositionsIndexRoute,
   PrivateRequisitionsIndexRoute: PrivateRequisitionsIndexRoute,
+  PrivateSalariesIndexRoute: PrivateSalariesIndexRoute,
+  PrivateSalaryProcessingIndexRoute: PrivateSalaryProcessingIndexRoute,
   PrivateUsersIndexRoute: PrivateUsersIndexRoute,
   PrivateVacanciesIndexRoute: PrivateVacanciesIndexRoute,
   PrivateVacationsIndexRoute: PrivateVacationsIndexRoute,
