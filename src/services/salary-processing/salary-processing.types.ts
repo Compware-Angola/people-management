@@ -22,7 +22,9 @@ export type SalaryProcessing = {
   endDate: string
   status: SalaryProcessingStatus
   responsibleEmployeeId: number
+  responsibleEmployeeName?: string | null
   validatorEmployeeId?: number | null
+  validatorEmployeeName?: string | null
   validatedAt?: string | null
   originProcessingId?: number | null
   createdAt: string
@@ -36,6 +38,7 @@ export type SalaryProcessingRubricLine = {
 
 export type SalaryProcessingEmployeeTotal = {
   employeeId: number
+  employeeName?: string | null
   salaryValue: number | null
   workedHours: number | null
   overtimeHours: number | null
@@ -47,6 +50,7 @@ export type SalaryProcessingEmployeeTotal = {
 
 export type SalaryProcessingSkippedEmployee = {
   employeeId: number
+  employeeName?: string | null
   reason: string
 }
 

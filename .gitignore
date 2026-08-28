@@ -12,3 +12,7 @@ dist-ssr
 .history/
 __unconfig*
 todos.json
+playwright-report/
+test-results/
+tests/
+playwright.config.ts

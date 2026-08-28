@@ -351,11 +351,11 @@ export function ListSalaryProcessing() {
                         status={processing.status}
                       />
                     </TableCell>
-                    <TableCell>#{processing.responsibleEmployeeId}</TableCell>
                     <TableCell>
-                      {processing.validatorEmployeeId
-                        ? `#${processing.validatorEmployeeId}`
-                        : '-'}
+                      {emptyValue(processing.responsibleEmployeeName)}
+                    </TableCell>
+                    <TableCell>
+                      {emptyValue(processing.validatorEmployeeName)}
                     </TableCell>
                     <TableCell>
                       {processing.validatedAt

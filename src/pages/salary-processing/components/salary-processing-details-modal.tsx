@@ -45,6 +45,13 @@ function emptyValue(value?: string | number | null) {
   return value
 }
 
+function employeeDisplayName(employee: {
+  employeeId: number
+  employeeName?: string | null
+}) {
+  return employee.employeeName || `#${employee.employeeId}`
+}
+
 export function SalaryProcessingDetailsModal({
   open,
   onOpenChange,
@@ -68,7 +75,7 @@ export function SalaryProcessingDetailsModal({
         </DialogHeader>
 
         {processing ? (
-          <div className="grid gap-3 md:grid-cols-4">
+          <div className="grid gap-3 md:grid-cols-5">
             <Card className="p-3">
               <p className="text-sm text-muted-foreground">Estado</p>
               <SalaryProcessingStatusBadge status={processing.status} />
@@ -84,7 +91,13 @@ export function SalaryProcessingDetailsModal({
             <Card className="p-3">
               <p className="text-sm text-muted-foreground">Responsável</p>
               <p className="font-medium">
-                #{processing.responsibleEmployeeId}
+                {emptyValue(processing.responsibleEmployeeName)}
+              </p>
+            </Card>
+            <Card className="p-3">
+              <p className="text-sm text-muted-foreground">Validador</p>
+              <p className="font-medium">
+                {emptyValue(processing.validatorEmployeeName)}
               </p>
             </Card>
           </div>
@@ -123,7 +136,7 @@ export function SalaryProcessingDetailsModal({
                 ) : (
                   employees.map((employee) => (
                     <TableRow key={employee.employeeId}>
-                      <TableCell>#{employee.employeeId}</TableCell>
+                      <TableCell>{employeeDisplayName(employee)}</TableCell>
                       <TableCell>
                         {formatCurrency(employee.salaryValue)}
                       </TableCell>
@@ -154,7 +167,7 @@ export function SalaryProcessingDetailsModal({
                   className="rounded-md border p-3 text-sm"
                 >
                   <span className="font-medium">
-                    Colaborador #{employee.employeeId}
+                    {employeeDisplayName(employee)}
                   </span>
                   <span className="text-muted-foreground">
                     {' '}
