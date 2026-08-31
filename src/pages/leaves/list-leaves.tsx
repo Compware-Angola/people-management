@@ -181,7 +181,7 @@ export function ListLeaves() {
       </div>
 
       <Card className="p-4">
-        <div className="grid gap-4 md:grid-cols-[minmax(180px,220px)_minmax(180px,220px)_auto] md:items-end">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-[repeat(2,minmax(0,1fr))_auto] lg:items-end [&_[data-slot=select-trigger]]:w-full">
           <div className="space-y-2">
             <label className="text-sm font-medium">Tipo de licença</label>
             <Select
@@ -228,7 +228,7 @@ export function ListLeaves() {
             </Select>
           </div>
 
-          <Button variant="outline" onClick={clearFilters}>
+          <Button variant="outline" className="lg:w-auto" onClick={clearFilters}>
             <X className="mr-2 h-4 w-4" />
             Limpar filtros
           </Button>

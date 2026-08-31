@@ -342,7 +342,7 @@ export function ListRequisitions() {
       </div>
 
       <Card className="p-4">
-        <div className="grid gap-3 md:grid-cols-4 xl:grid-cols-5">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 [&_[data-slot=input]]:w-full [&_[data-slot=select-trigger]]:w-full">
           <div className="space-y-2">
             <Label>Código</Label>
             <Input
